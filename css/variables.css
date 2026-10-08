@@ -1,0 +1,75 @@
+:root {
+  /* الألوان الأساسية */
+  --primary:#059669;
+  --primary-light:#10B981;
+  --primary-dark:#047857;
+  --primary-glow:rgba(5,150,105,.25);
+
+  /* الألوان الثانوية */
+  --blue:#2563EB;
+  --warning:#D97706;
+  --danger:#DC2626;
+  --danger-soft:#FEE2E2;
+  --info:#0EA5E9;
+
+  /* الوضع الفاتح */
+  --bg:#F1F5F9;
+  --bg-elevated:#FFFFFF;
+  --card:#FFFFFF;
+  --card-hover:#F8FAFC;
+  --text:#0F172A;
+  --text-secondary:#334155;
+  --muted:#64748B;
+  --border:#E2E8F0;
+  --border-strong:#CBD5E1;
+  --overlay:rgba(15,23,42,.55);
+
+  /* المسافات */
+  --radius-xs:8px;
+  --radius-sm:12px;
+  --radius:16px;
+  --radius-lg:20px;
+  --radius-xl:24px;
+
+  /* الظلال */
+  --shadow-xs:0 1px 2px rgba(15,23,42,.04);
+  --shadow-sm:0 2px 8px rgba(15,23,42,.06);
+  --shadow:0 4px 16px rgba(15,23,42,.08);
+  --shadow-lg:0 10px 30px rgba(15,23,42,.12);
+  --shadow-glow:0 8px 24px var(--primary-glow);
+
+  /* Safe area */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+
+  /* Transitions */
+  --t-fast:.15s ease;
+  --t:.25s cubic-bezier(.4,0,.2,1);
+  --t-slow:.4s cubic-bezier(.4,0,.2,1);
+
+  /* شريط علوي */
+  --topbar-h:60px;
+  --bottomnav-h:64px;
+}
+
+[data-theme="dark"] {
+  --bg:#0B1220;
+  --bg-elevated:#0F172A;
+  --card:#121B2E;
+  --card-hover:#182236;
+  --text:#E2E8F0;
+  --text-secondary:#CBD5E1;
+  --muted:#8AA0B8;
+  --border:#22304D;
+  --border-strong:#334155;
+  --overlay:rgba(0,0,0,.7);
+  --danger-soft:#3B1F1F;
+
+  --shadow-xs:0 1px 2px rgba(0,0,0,.3);
+  --shadow-sm:0 2px 8px rgba(0,0,0,.35);
+  --shadow:0 4px 16px rgba(0,0,0,.4);
+  --shadow-lg:0 10px 30px rgba(0,0,0,.5);
+  --shadow-glow:0 8px 24px rgba(5,150,105,.35);
+}

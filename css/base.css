@@ -1,0 +1,91 @@
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { margin:0; padding:0; height:100%; }
+
+html { -webkit-text-size-adjust:100%; }
+
+body {
+  font-family:'Segoe UI', Tahoma, system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  direction:rtl;
+  line-height:1.55;
+  font-size:15px;
+  overflow-x:hidden;
+  padding-top:var(--safe-top);
+  padding-left:var(--safe-left);
+  padding-right:var(--safe-right);
+  transition:background var(--t), color var(--t);
+}
+
+/* Scrollbar أنيق */
+::-webkit-scrollbar { width:8px; height:8px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb {
+  background:var(--border-strong);
+  border-radius:8px;
+}
+::-webkit-scrollbar-thumb:hover { background:var(--muted); }
+
+/* التحديد */
+::selection { background:var(--primary); color:#fff; }
+
+/* عناصر عامة */
+button, input, select, textarea {
+  font-family:inherit;
+  font-size:inherit;
+  color:inherit;
+}
+button {
+  cursor:pointer;
+  border:none;
+  background:none;
+  transition:transform var(--t-fast), background var(--t-fast), color var(--t-fast), box-shadow var(--t-fast);
+}
+button:active { transform:scale(.97); }
+button:disabled { opacity:.5; cursor:not-allowed; }
+
+h1,h2,h3,h4 { margin:0 0 .5rem; font-weight:700; letter-spacing:-.01em; }
+h1 { font-size:1.5rem; }
+h2 { font-size:1.2rem; }
+h3 { font-size:1.05rem; }
+
+a { color:var(--primary); text-decoration:none; }
+a:hover { text-decoration:underline; }
+
+img { max-width:100%; height:auto; display:block; }
+
+/* Utilities */
+.muted { color:var(--muted); }
+.small { font-size:.82rem; }
+.tiny { font-size:.72rem; }
+.hidden, [hidden] { display:none !important; }
+
+.flex { display:flex; }
+.flex-col { display:flex; flex-direction:column; }
+.items-center { align-items:center; }
+.justify-between { justify-content:space-between; }
+.gap-1 { gap:.25rem; }
+.gap-2 { gap:.5rem; }
+.gap-3 { gap:.75rem; }
+
+.error-box {
+  background:var(--danger-soft);
+  color:var(--danger);
+  padding:.65rem .9rem;
+  border-radius:var(--radius-sm);
+  font-size:.88rem;
+  margin:.5rem 0;
+  border-right:3px solid var(--danger);
+}
+
+/* Skeleton loading */
+.skeleton {
+  background:linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.5s infinite;
+  border-radius:var(--radius-sm);
+}
+@keyframes shimmer {
+  0% { background-position:200% 0; }
+  100% { background-position:-200% 0; }
+}

@@ -1,0 +1,76 @@
+/* هواتف صغيرة */
+@media(max-width:360px){
+  body { font-size:14px; }
+  .item-card .ic-prices { grid-template-columns:1fr; }
+  .item-card .ic-prices > div:not(:last-child)::after { display:none; }
+  .stocktake-stats { grid-template-columns:1fr; }
+  .filters-panel { grid-template-columns:1fr; }
+  .brand > div span { display:none; }
+}
+
+/* هاتف متوسط */
+@media(min-width:390px){
+  .stocktake-stats { grid-template-columns:repeat(4, 1fr); }
+}
+
+/* لوحي */
+@media(min-width:768px){
+  .items-grid { grid-template-columns:repeat(2, 1fr); }
+  .page { padding:1.2rem; }
+  .filters-panel { grid-template-columns:repeat(3, 1fr); }
+}
+
+/* سطح المكتب */
+@media(min-width:1024px){
+  .page {
+    max-width:1400px;
+    margin:0 auto;
+    padding:1.5rem;
+  }
+  .items-grid {
+    grid-template-columns:repeat(3, 1fr);
+    gap:1rem;
+  }
+  .filters-panel { grid-template-columns:repeat(4, 1fr); }
+  .bottom-nav { display:none; }  /* على سطح المكتب نخفي الشريط السفلي */
+  .app-shell { padding-bottom:1rem; }
+
+  /* إظهار التنقل العلوي بدلًا من السفلي */
+  .topbar::after {
+    content:'';
+    display:none;
+  }
+}
+
+/* شاشات عريضة */
+@media(min-width:1366px){
+  .page { padding:2rem; }
+  .items-grid { grid-template-columns:repeat(4, 1fr); }
+}
+
+/* شاشات فائقة العرض */
+@media(min-width:1920px){
+  .items-grid { grid-template-columns:repeat(5, 1fr); }
+}
+
+/* الطباعة */
+@media print {
+  .topbar, .bottom-nav, .item-card .ic-actions,
+  .search-bar, .filters-panel, .items-toolbar,
+  .load-more-wrap { display:none !important; }
+  .item-card {
+    box-shadow:none;
+    border:1px solid #ccc;
+    page-break-inside:avoid;
+  }
+  body { background:#fff; }
+}
+
+/* تقليل الحركة */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+  }
+}

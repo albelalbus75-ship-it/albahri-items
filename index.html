@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1" />
+<meta name="theme-color" content="#059669" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="البحري" />
+<title>البحري — الأصناف</title>
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
+<link rel="stylesheet" href="css/variables.css" />
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/layout.css" />
+<link rel="stylesheet" href="css/cards.css" />
+<link rel="stylesheet" href="css/forms.css" />
+<link rel="stylesheet" href="css/modals.css" />
+<link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+
+<!-- شاشة الدخول -->
+<section id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="logo-badge">البحري</div>
+    <h1>البحري — الأصناف</h1>
+    <p class="muted">نظام إدارة المخزون</p>
+    <form id="loginForm" autocomplete="on">
+      <label>اسم المستخدم
+        <input type="text" id="loginUser" required autocomplete="username" />
+      </label>
+      <label>كلمة المرور
+        <input type="password" id="loginPass" required autocomplete="current-password" />
+      </label>
+      <div id="loginError" class="error-box" hidden></div>
+      <button type="submit" class="btn primary">دخول</button>
+    </form>
+    <p class="hint muted small">الحساب الافتراضي: admin / admin123 — يُنصح بتغييره فورًا.</p>
+  </div>
+</section>
+
+<!-- الواجهة الرئيسية -->
+<section id="appShell" class="app-shell" hidden>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo-badge small">البحري</div>
+      <div>
+        <strong>البحري</strong>
+        <span class="muted">الأصناف</span>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <span id="cloudStatus" class="cloud-pill" title="حالة السحابة">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+        <span id="cloudText">محلي</span>
+      </span>
+      <button id="themeToggle" class="icon-btn" title="تبديل الوضع">🌙</button>
+      <button id="userMenuBtn" class="user-btn" aria-label="قائمة المستخدم">
+        <span id="userInitial">؟</span>
+      </button>
+    </div>
+    <div id="userMenu" class="user-menu" hidden>
+      <div class="user-menu-header">
+        <strong id="menuUserName">—</strong>
+        <span class="muted small" id="menuUserRole">—</span>
+      </div>
+      <button data-action="profile">👤 ملفي</button>
+      <button data-action="changePass">🔑 تغيير كلمة المرور</button>
+      <button data-action="users" data-admin="1">👥 إدارة المستخدمين</button>
+      <button data-action="logout" class="danger">🚪 تسجيل الخروج</button>
+    </div>
+  </header>
+
+  <main id="mainArea">
+    <!-- صفحة الأصناف -->
+    <section id="pageItems" class="page">
+      <div class="search-bar">
+        <input id="searchInput" type="search" placeholder="ابحث بالاسم، الباركود، الرقم، الموديل..." />
+        <button id="cameraBtn" class="icon-btn camera" title="مسح الباركود بالكاميرا">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
+            <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+            <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
+            <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+            <line x1="7" y1="12" x2="17" y2="12"/>
+          </svg>
+        </button>
+        <button id="voiceBtn" class="icon-btn" title="بحث صوتي">🎙️</button>
+        <button id="filterBtn" class="icon-btn" title="الفلاتر">⚙️</button>
+      </div>
+
+      <div id="filtersPanel" class="filters-panel" hidden></div>
+
+      <div id="voiceStatus" class="voice-status" hidden>
+  <button id="voiceBack" class="voice-back-btn" title="رجوع">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m9 18 6-6-6-6"/>
+    </svg>
+  </button>
+  <span class="recording-dot"></span>
+  <span id="voiceText">جاري الاستماع...</span>
+  <button id="voiceStop" class="voice-stop-btn" title="إيقاف">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+      <rect x="6" y="6" width="12" height="12" rx="2"/>
+    </svg>
+  </button>
+</div>
+
+      <div class="items-toolbar">
+        <span id="itemsCount" class="muted small">0 صنف</span>
+        <button id="addItemBtn" class="btn primary small" data-perm="add">+ إضافة صنف</button>
+      </div>
+
+      <div id="itemsGrid" class="items-grid"></div>
+
+      <div class="load-more-wrap">
+        <button id="loadMoreBtn" class="btn ghost" hidden>تحميل المزيد</button>
+      </div>
+    </section>
+
+    <!-- صفحة الجرد -->
+    <section id="pageStocktake" class="page" hidden>
+      <div class="stocktake-stats">
+        <div class="stat"><span class="muted small">إجمالي</span><strong id="stTotal">0</strong></div>
+        <div class="stat"><span class="muted small">مُجرى</span><strong id="stDone">0</strong></div>
+        <div class="stat"><span class="muted small">متبقي</span><strong id="stRemain">0</strong></div>
+        <div class="stat"><span class="muted small">قيمة التكلفة</span><strong id="stValue">0</strong></div>
+      </div>
+      <div class="stocktake-actions">
+        <button id="stScanBtn" class="btn primary small">📷 مسح باركود</button>
+        <button id="stAddRowBtn" class="btn ghost small">+ صف</button>
+        <button id="stSaveBtn" class="btn primary small">حفظ</button>
+        <button id="stExportBtn" class="btn ghost small">تصدير CSV</button>
+        <button id="stClearBtn" class="btn danger small">مسح الجرد</button>
+      </div>
+      <div id="stRows" class="st-rows"></div>
+    </section>
+
+    <!-- صفحة الأدوات -->
+    <section id="pageTools" class="page" hidden>
+      <h2>الأدوات</h2>
+      <div class="tools-list">
+        <button class="tool-item" data-action="rate"><span>💵 سعر الصرف</span><span id="rateValue" class="muted small">—</span></button>
+        <button class="tool-item" data-action="sync"><span>🔄 مزامنة سحابية</span><span id="syncInfo" class="muted small">—</span></button>
+        <button class="tool-item" data-action="users" data-admin="1"><span>👥 المستخدمون</span></button>
+        <button class="tool-item" data-action="import" data-admin="1"><span>📥 استيراد CSV</span></button>
+        <button class="tool-item" data-action="export"><span>📤 تصدير CSV</span></button>
+        <button class="tool-item" data-action="template"><span>📋 قالب الاستيراد</span></button>
+        <button class="tool-item" data-action="clearFilters"><span>🧹 مسح الفلاتر</span></button>
+        <button class="tool-item danger" data-action="clearAll" data-admin="1"><span>🗑️ حذف كل الأصناف</span></button>
+        <button class="tool-item" data-action="audit" data-admin="1"><span>📜 سجل العمليات</span></button>
+        <button class="tool-item" data-action="backup" data-admin="1"><span>💾 نسخة احتياطية</span></button>
+        <button class="tool-item" data-action="restore" data-admin="1"><span>♻️ استعادة نسخة</span></button>
+      </div>
+      <div class="app-version muted small" id="appVersion"></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button data-page="items" class="active">📦<span>الأصناف</span></button>
+    <button data-page="stocktake">📊<span>الجرد</span></button>
+    <button data-page="tools">⚙️<span>الأدوات</span></button>
+  </nav>
+</section>
+
+<!-- حاويات النوافذ -->
+<div id="modalRoot"></div>
+<div id="toastRoot" class="toast-root"></div>
+<div id="scannerRoot" class="scanner-root" hidden>
+  <!-- شريط علوي داخلي للكاميرا -->
+  <div class="scanner-topbar">
+    <button id="scannerBack" class="scanner-back-btn" title="رجوع">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m9 18 6-6-6-6"/>
+      </svg>
+      <span>رجوع</span>
+    </button>
+    <span class="scanner-title">مسح الباركود</span>
+    <button id="scannerTorch" class="scanner-torch-btn" title="الفلاش">🔦</button>
+  </div>
+
+  <div id="scannerView"></div>
+
+  <div class="scanner-controls">
+    <label class="chip"><input type="checkbox" id="scanContinuous" checked /> وضع مستمر</label>
+    <button id="scannerClose" class="btn danger">إغلاق</button>
+  </div>
+  <div id="scanHint" class="scan-hint">وجّه الكاميرا نحو الباركود</div>
+</div>
+
+<!-- مكتبات -->
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+<!-- وحدات التطبيق -->
+<script src="js/utils.js"></script>
+<script src="js/database.js"></script>
+<script src="js/firestore.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/permissions.js"></script>
+<script src="js/audit.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/search.js"></script>
+<script src="js/items.js"></script>
+<script src="js/qr.js"></script>
+<script src="js/barcode.js"></script>
+<script src="js/stocktake.js"></script>
+<script src="js/csv.js"></script>
+<script src="js/users.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
