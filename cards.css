@@ -1,0 +1,556 @@
+/* ===================================================== */
+/* ============ شبكة الأصناف ============================ */
+/* ===================================================== */
+.items-grid {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:.75rem;
+}
+
+/* ===================================================== */
+/* ============ بطاقة الصنف ============================= */
+/* ===================================================== */
+.item-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1rem;
+  box-shadow:var(--shadow-sm);
+  display:flex;
+  flex-direction:column;
+  gap:.7rem;
+  position:relative;
+  overflow:hidden;
+  transition:transform var(--t), box-shadow var(--t), border-color var(--t);
+}
+
+/* شريط جانبي ملون حسب الحالة */
+.item-card::before {
+  content:'';
+  position:absolute;
+  top:0;
+  right:0;
+  bottom:0;
+  width:4px;
+  background:linear-gradient(180deg, var(--primary), var(--primary-light));
+  border-radius:0 var(--radius) var(--radius) 0;
+}
+.item-card:hover {
+  transform:translateY(-2px);
+  box-shadow:var(--shadow);
+  border-color:var(--primary);
+}
+.item-card:hover::before {
+  width:6px;
+}
+
+/* ============ رأس البطاقة ============ */
+.item-card .ic-head {
+  display:flex;
+  justify-content:space-between;
+  gap:.5rem;
+  align-items:flex-start;
+  padding-right:.3rem;
+}
+.item-card .ic-head > div:first-child {
+  flex:1;
+  min-width:0;
+}
+.item-card .ic-name {
+  font-weight:700;
+  font-size:1.02rem;
+  color:var(--text);
+  line-height:1.35;
+  letter-spacing:-.01em;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+}
+.item-card .ic-no {
+  font-size:.75rem;
+  color:var(--muted);
+  margin-top:.2rem;
+  display:inline-flex;
+  align-items:center;
+  gap:.3rem;
+  background:var(--bg);
+  padding:.15rem .5rem;
+  border-radius:6px;
+  font-weight:500;
+  font-variant-numeric:tabular-nums;
+}
+.item-card .ic-no::before {
+  content:'#';
+  color:var(--primary);
+  font-weight:700;
+}
+
+/* ============ الوسوم ============ */
+.item-card .ic-tags {
+  display:flex;
+  flex-wrap:wrap;
+  gap:.3rem;
+}
+.item-card .ic-tags span {
+  background:var(--bg);
+  border:1px solid var(--border);
+  padding:.2rem .55rem;
+  border-radius:8px;
+  font-size:.72rem;
+  color:var(--text-secondary);
+  font-weight:500;
+  transition:all var(--t-fast);
+  display:inline-flex;
+  align-items:center;
+  gap:.25rem;
+}
+.item-card .ic-tags span:hover {
+  background:var(--primary);
+  color:#fff;
+  border-color:var(--primary);
+}
+/* أول وسم (الباركود) بلون مختلف */
+.item-card .ic-tags span:first-child {
+  background:rgba(5,150,105,.1);
+  color:var(--primary);
+  border-color:rgba(5,150,105,.25);
+  font-family:'Courier New', monospace;
+  font-weight:600;
+  letter-spacing:.3px;
+}
+.item-card .ic-tags span:first-child:hover {
+  background:var(--primary);
+  color:#fff;
+}
+
+/* ============ شبكة الأسعار ============ */
+.item-card .ic-prices {
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:.4rem;
+  background:var(--bg);
+  padding:.6rem .5rem;
+  border-radius:var(--radius-sm);
+  border:1px solid var(--border);
+  position:relative;
+}
+[data-theme="dark"] .item-card .ic-prices {
+  background:rgba(5,150,105,.05);
+}
+.item-card .ic-prices > div {
+  display:flex;
+  flex-direction:column;
+  gap:.2rem;
+  font-size:.7rem;
+  align-items:center;
+  text-align:center;
+  position:relative;
+  padding:.15rem 0;
+}
+.item-card .ic-prices > div:not(:last-child)::after {
+  content:'';
+  position:absolute;
+  left:-.2rem;
+  top:15%;
+  bottom:15%;
+  width:1px;
+  background:var(--border);
+}
+.item-card .ic-prices span {
+  color:var(--muted);
+  font-weight:500;
+  font-size:.68rem;
+  white-space:nowrap;
+}
+.item-card .ic-prices strong {
+  font-size:.92rem;
+  color:var(--primary);
+  font-weight:700;
+  letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+.item-card .ic-prices > div:nth-child(2) strong {
+  color:var(--blue);
+}
+.item-card .ic-prices > div:nth-child(3) strong {
+  color:var(--warning);
+}
+.item-card .ic-prices > div:nth-child(4) strong {
+  color:var(--text-secondary);
+}
+
+/* ============ أزرار البطاقة ============ */
+.item-card .ic-actions {
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:.4rem;
+}
+.item-card .ic-actions button {
+  padding:.55rem .3rem;
+  border-radius:9px;
+  border:1px solid var(--border);
+  background:var(--bg);
+  font-size:.78rem;
+  font-weight:600;
+  color:var(--text-secondary);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.25rem;
+  transition:all var(--t-fast);
+  min-height:36px;
+}
+.item-card .ic-actions button:hover {
+  background:var(--primary);
+  color:#fff;
+  border-color:var(--primary);
+  transform:translateY(-1px);
+}
+.item-card .ic-actions button.qr:hover {
+  background:var(--blue);
+  border-color:var(--blue);
+}
+.item-card .ic-actions button.share:hover {
+  background:var(--info);
+  border-color:var(--info);
+}
+.item-card .ic-actions button.edit:hover {
+  background:var(--warning);
+  border-color:var(--warning);
+}
+.item-card .ic-actions button.del {
+  color:var(--danger);
+  border-color:rgba(220,38,38,.25);
+}
+.item-card .ic-actions button.del:hover {
+  background:var(--danger);
+  color:#fff;
+  border-color:var(--danger);
+}
+
+/* ===================================================== */
+/* ============ حالة فارغة ============================== */
+/* ===================================================== */
+.empty-state {
+  text-align:center;
+  padding:4rem 1rem;
+  color:var(--muted);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:.6rem;
+  font-size:.95rem;
+  grid-column:1 / -1;
+}
+.empty-state::before {
+  content:'📦';
+  font-size:4rem;
+  opacity:.35;
+  margin-bottom:.5rem;
+  filter:grayscale(.5);
+}
+.empty-state strong {
+  color:var(--text);
+  font-size:1.05rem;
+}
+
+.load-more-wrap {
+  text-align:center;
+  padding:1.5rem 0;
+}
+
+/* ===================================================== */
+/* ============ شريط الجرد ============================== */
+/* ===================================================== */
+.stocktake-stats {
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:.5rem;
+  margin-bottom:.75rem;
+}
+.stocktake-stats .stat {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:.7rem .8rem;
+  display:flex;
+  flex-direction:column;
+  gap:.2rem;
+  position:relative;
+  overflow:hidden;
+}
+.stocktake-stats .stat::before {
+  content:'';
+  position:absolute;
+  top:0;
+  right:0;
+  width:4px;
+  height:100%;
+  background:var(--primary);
+}
+.stocktake-stats .stat:nth-child(2)::before { background:var(--blue); }
+.stocktake-stats .stat:nth-child(3)::before { background:var(--warning); }
+.stocktake-stats .stat:nth-child(4)::before { background:var(--info); }
+.stocktake-stats .stat strong {
+  font-size:1.15rem;
+  color:var(--primary);
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.02em;
+}
+.stocktake-stats .stat:nth-child(2) strong { color:var(--blue); }
+.stocktake-stats .stat:nth-child(3) strong { color:var(--warning); }
+.stocktake-stats .stat:nth-child(4) strong { color:var(--info); font-size:.95rem; }
+
+.stocktake-actions {
+  display:flex;
+  gap:.4rem;
+  flex-wrap:wrap;
+  margin-bottom:.75rem;
+}
+.stocktake-actions button { flex:1; min-width:120px; }
+
+.st-rows {
+  display:flex;
+  flex-direction:column;
+  gap:.5rem;
+}
+.st-row {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:.7rem .85rem;
+  display:grid;
+  grid-template-columns:1fr auto auto;
+  gap:.6rem;
+  align-items:center;
+  transition:all var(--t-fast);
+}
+.st-row:hover { border-color:var(--primary); box-shadow:var(--shadow-sm); }
+.st-info {
+  display:flex;
+  flex-direction:column;
+  gap:.15rem;
+  min-width:0;
+}
+.st-info strong {
+  font-size:.92rem;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.st-qty {
+  display:flex;
+  align-items:center;
+  gap:.25rem;
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:.2rem;
+}
+.st-qty button {
+  width:30px;
+  height:30px;
+  border-radius:8px;
+  background:var(--card);
+  font-weight:700;
+  font-size:1.05rem;
+  color:var(--primary);
+  border:1px solid var(--border);
+}
+.st-qty button:hover { background:var(--primary); color:#fff; border-color:var(--primary); }
+.st-qty input {
+  width:60px;
+  padding:.3rem;
+  border:none;
+  background:transparent;
+  text-align:center;
+  font-weight:700;
+  font-size:.95rem;
+  color:var(--text);
+  outline:none;
+}
+.st-del {
+  width:34px;
+  height:34px;
+  border-radius:9px;
+  background:var(--danger-soft);
+  color:var(--danger);
+  font-size:.9rem;
+}
+.st-del:hover { background:var(--danger); color:#fff; }
+
+/* ===================================================== */
+/* ============ صفحة الأدوات ============================ */
+/* ===================================================== */
+.tools-list {
+  display:flex;
+  flex-direction:column;
+  gap:.5rem;
+}
+.tool-item {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:.9rem 1rem;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  text-align:right;
+  font-size:.95rem;
+  font-weight:500;
+  color:var(--text);
+  transition:all var(--t-fast);
+  position:relative;
+  overflow:hidden;
+}
+.tool-item::before {
+  content:'';
+  position:absolute;
+  top:0;
+  right:0;
+  width:0;
+  height:100%;
+  background:var(--primary);
+  transition:width var(--t);
+  z-index:0;
+}
+.tool-item:hover {
+  border-color:var(--primary);
+  transform:translateX(-3px);
+  box-shadow:var(--shadow-sm);
+}
+.tool-item:hover::before { width:3px; }
+.tool-item > * { position:relative; z-index:1; }
+.tool-item.danger { color:var(--danger); }
+.tool-item.danger:hover { border-color:var(--danger); }
+.tool-item.danger::before { background:var(--danger); }
+
+/* ===================================================== */
+/* ============ الاستجابة (Responsive) ================== */
+/* ===================================================== */
+
+/* شاشات صغيرة جدًا */
+@media (max-width:360px){
+  .item-card .ic-prices {
+    grid-template-columns:repeat(2, 1fr);
+    gap:.6rem;
+  }
+  .item-card .ic-prices > div:nth-child(2)::after {
+    display:none;
+  }
+  .item-card .ic-actions {
+    grid-template-columns:repeat(2, 1fr);
+  }
+}
+
+/* الهواتف المتوسطة والكبيرة — عمود واحد، تصميم فسيح */
+@media (min-width:480px) and (max-width:899px){
+  .item-card {
+    padding:1.1rem;
+  }
+  .item-card .ic-name {
+    font-size:1.1rem;
+  }
+  .item-card .ic-prices {
+    padding:.75rem .6rem;
+    gap:.6rem;
+  }
+  .item-card .ic-prices strong {
+    font-size:1rem;
+  }
+  .item-card .ic-actions button {
+    padding:.65rem .4rem;
+    font-size:.85rem;
+  }
+}
+
+/* الأجهزة اللوحية — عمودان */
+@media (min-width:900px){
+  .items-grid {
+    grid-template-columns:repeat(2, 1fr);
+    gap:.9rem;
+  }
+}
+
+/* اللابتوب — ثلاثة أعمدة */
+@media (min-width:1200px){
+  .items-grid {
+    grid-template-columns:repeat(3, 1fr);
+    gap:1rem;
+  }
+  .item-card {
+    padding:1rem;
+  }
+  .item-card .ic-prices strong {
+    font-size:.95rem;
+  }
+}
+
+/* الشاشات العريضة — أربعة أعمدة */
+@media (min-width:1600px){
+  .items-grid {
+    grid-template-columns:repeat(4, 1fr);
+  }
+  .item-card .ic-name {
+    font-size:1.05rem;
+  }
+}
+
+/* شاشات فائقة العرض — خمسة أعمدة */
+@media (min-width:2000px){
+  .items-grid {
+    grid-template-columns:repeat(5, 1fr);
+  }
+}
+
+/* ============ استجابة الجرد على الجوال ============ */
+@media (max-width:400px){
+  .stocktake-stats {
+    grid-template-columns:repeat(2, 1fr);
+  }
+  .stocktake-actions button {
+    min-width:calc(50% - .2rem);
+    font-size:.8rem;
+  }
+  .st-row {
+    grid-template-columns:1fr;
+    gap:.5rem;
+    padding:.8rem;
+  }
+  .st-qty { justify-self:start; }
+  .st-del {
+    justify-self:end;
+    align-self:start;
+    margin-top:-42px;
+  }
+}
+
+/* ============ استجابة الفلاتر ============ */
+@media (min-width:768px){
+  .filters-panel {
+    grid-template-columns:repeat(3, 1fr);
+  }
+}
+@media (min-width:1024px){
+  .filters-panel {
+    grid-template-columns:repeat(4, 1fr);
+  }
+}
+/* ============ وسم الباركود ============ */
+.item-card .ic-tags .tag-barcode {
+  background:rgba(5,150,105,.12);
+  color:var(--primary);
+  border-color:rgba(5,150,105,.3);
+  font-family:'Courier New', 'Consolas', monospace;
+  font-weight:700;
+  letter-spacing:.5px;
+  font-variant-numeric:tabular-nums;
+}
+.item-card .ic-tags .tag-barcode:hover {
+  background:var(--primary);
+  color:#fff;
+  border-color:var(--primary);
+}
