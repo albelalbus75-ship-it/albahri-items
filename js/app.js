@@ -99,41 +99,41 @@ const App = (() => {
     document.getElementById('loadMoreBtn').hidden = shown >= list.length;
   }
 
-  function itemCardHTML(it){
-    const rate = Settings.rate();
-    const yem = U.formatMoney((it.retail||0) * rate);
-    const canEdit = Perm.can('edit');
-    const canDel = Perm.can('delete');
-    const canCost = Perm.can('viewCost');
-    const canWhole = Perm.can('viewWhole');
-    return `
-      <article class="item-card" data-id="${U.escapeHtml(it.id)}">
-        <div class="ic-head">
-          <div>
-            <div class="ic-name">${U.escapeHtml(it.name)}</div>
-            <div class="ic-no">رقم: ${U.escapeHtml(it.no||'-')}</div>
-          </div>
+ function itemCardHTML(it){
+  const rate = Settings.rate();
+  const yem = U.formatMoney((it.retail||0) * rate);
+  const canEdit = Perm.can('edit');
+  const canDel = Perm.can('delete');
+  const canCost = Perm.can('viewCost');
+  const canWhole = Perm.can('viewWhole');
+  return `
+    <article class="item-card" data-id="${U.escapeHtml(it.id)}">
+      <div class="ic-head">
+        <div>
+          <div class="ic-name">${U.escapeHtml(it.name)}</div>
+          <div class="ic-no">رقم: ${U.escapeHtml(it.no||'-')}</div>
         </div>
-        <div class="ic-tags">
-          ${it.barcode ? `<span>${U.escapeHtml(it.barcode)}</span>`:''}
-          ${it.unit ? `<span>${U.escapeHtml(it.unit)}</span>`:''}
-          ${it.model ? `<span>${U.escapeHtml(it.model)}</span>`:''}
-          ${it.branch ? `<span>${U.escapeHtml(it.branch)}</span>`:''}
-        </div>
-        <div class="ic-prices">
-          <div><span class="muted small">سعر البيع</span><strong>${U.formatMoney(it.retail)}</strong></div>
-          <div><span class="muted small">ريال يمني</span><strong>${yem}</strong></div>
-          ${canWhole ? `<div><span class="muted small">الجملة</span><strong>${U.formatMoney(it.whole)}</strong></div>`:''}
-          ${canCost ? `<div><span class="muted small">التكلفة</span><strong>${U.formatMoney(it.cost)}</strong></div>`:''}
-        </div>
-        <div class="ic-actions">
-          <button data-act="qr" class="qr">QR</button>
-          <button data-act="share" class="share">📤</button>
-          ${canEdit ? `<button data-act="edit" class="edit">تعديل</button>`:''}
-          ${canDel ? `<button data-act="del" class="del">حذف</button>`:''}
-        </div>
-      </article>`;
-  }
+      </div>
+      <div class="ic-tags">
+        <span class="tag-barcode" title="الباركود">📊 ${U.escapeHtml(it.barcode || '—')}</span>
+        ${it.unit ? `<span>${U.escapeHtml(it.unit)}</span>`:''}
+        ${it.model ? `<span>${U.escapeHtml(it.model)}</span>`:''}
+        ${it.branch ? `<span>${U.escapeHtml(it.branch)}</span>`:''}
+      </div>
+      <div class="ic-prices">
+        <div><span class="muted small">سعر البيع</span><strong>${U.formatMoney(it.retail)}</strong></div>
+        <div><span class="muted small">ريال يمني</span><strong>${yem}</strong></div>
+        ${canWhole ? `<div><span class="muted small">الجملة</span><strong>${U.formatMoney(it.whole)}</strong></div>`:''}
+        ${canCost ? `<div><span class="muted small">التكلفة</span><strong>${U.formatMoney(it.cost)}</strong></div>`:''}
+      </div>
+      <div class="ic-actions">
+        <button data-act="qr" class="qr">QR</button>
+        <button data-act="share" class="share">📤</button>
+        ${canEdit ? `<button data-act="edit" class="edit">تعديل</button>`:''}
+        ${canDel ? `<button data-act="del" class="del">حذف</button>`:''}
+      </div>
+    </article>`;
+}
 
   function wireItemCards(){
     document.querySelectorAll('.item-card').forEach(card => {
