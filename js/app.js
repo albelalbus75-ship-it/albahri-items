@@ -316,11 +316,13 @@ ${canCost ? `<div><span class="muted small">التكلفة</span><strong>${U.for
 
     // النتائج
     rec.onresult = e => {
-      const t = Array.from(e.results).map(r => r[0].transcript).join(' ');
-      txt.textContent = t;
-      document.getElementById('searchInput').value = t;
-      renderItems();
-    };
+  let t = Array.from(e.results).map(r => r[0].transcript).join(' ');
+  // إصلاح الأرقام المعكوسة
+  t = U.fixArabicNumbers(t);
+  txt.textContent = t;
+  document.getElementById('searchInput').value = t;
+  renderItems();
+};
 
     // الأخطاء — نتعامل معها بهدوء
     rec.onerror = e => {
@@ -687,7 +689,18 @@ ${canCost ? `<div><span class="muted small">التكلفة</span><strong>${U.for
     // Search
     const searchInput = document.getElementById('searchInput');
     searchInput.addEventListener('input', U.debounce(() => { shown = pageSize; renderItems(); }, 180));
-
+// زر مسح البحث
+const clearSearchBtn = document.getElementById('clearSearchBtn');
+searchInput.addEventListener('input', () => {
+  clearSearchBtn.hidden = !searchInput.value;
+});
+clearSearchBtn.addEventListener('click', () => {
+  searchInput.value = '';
+  clearSearchBtn.hidden = true;
+  shown = pageSize;
+  renderItems();
+  searchInput.focus();
+});
     // Voice
     document.getElementById('voiceBtn').addEventListener('click', startVoice);
 
