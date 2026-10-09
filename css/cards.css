@@ -539,3 +539,18 @@
     grid-template-columns:repeat(4, 1fr);
   }
 }
+/* ============ وسم الباركود ============ */
+.item-card .ic-tags .tag-barcode {
+  background:rgba(5,150,105,.12);
+  color:var(--primary);
+  border-color:rgba(5,150,105,.3);
+  font-family:'Courier New', 'Consolas', monospace;
+  font-weight:700;
+  letter-spacing:.5px;
+  font-variant-numeric:tabular-nums;
+}
+.item-card .ic-tags .tag-barcode:hover {
+  background:var(--primary);
+  color:#fff;
+  border-color:var(--primary);
+}
