@@ -1,4 +1,4 @@
-const VERSION = 'albahri-v1.0.0';
+const VERSION = 'albahri-v1.0.3';
 const CORE = [
   './', './index.html', './manifest.json',
   './css/variables.css','./css/base.css','./css/layout.css','./css/cards.css',
