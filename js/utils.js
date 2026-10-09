@@ -1,19 +1,22 @@
-/* أدوات مساعدة عامة */
+/* Utility functions - ASCII only to avoid encoding issues */
 const U = (() => {
-  const AR_DIGITS = {'٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9'};
+  const AR_DIGITS = {
+    '\u0660':'0','\u0661':'1','\u0662':'2','\u0663':'3','\u0664':'4',
+    '\u0665':'5','\u0666':'6','\u0667':'7','\u0668':'8','\u0669':'9'
+  };
   function toEnglishDigits(s){
     if(s==null) return '';
-    return String(s).replace(/[٠-٩]/g, d => AR_DIGITS[d] || d);
+    return String(s).replace(/[\u0660-\u0669]/g, d => AR_DIGITS[d] || d);
   }
   function normalizeArabic(s){
     if(s==null) return '';
     return toEnglishDigits(String(s))
       .replace(/[\u064B-\u0652\u0670\u0640]/g,'')
-      .replace(/[أإآٱ]/g,'ا')
-      .replace(/ى/g,'ي')
-      .replace(/ؤ/g,'و')
-      .replace(/ئ/g,'ي')
-      .replace(/ة/g,'ه')
+      .replace(/[\u0623\u0625\u0622\u0671]/g,'\u0627')
+      .replace(/\u0649/g,'\u064A')
+      .replace(/\u0624/g,'\u0648')
+      .replace(/\u0626/g,'\u064A')
+      .replace(/\u0629/g,'\u0647')
       .replace(/\s+/g,' ')
       .trim()
       .toLowerCase();
@@ -68,16 +71,36 @@ const U = (() => {
     }catch(e){}
   }
   function vibrate(pattern){ try{ navigator.vibrate && navigator.vibrate(pattern); }catch(e){} }
+
+  // Arabic number words → digits (Unicode escapes)
+  const AR_WORDS = {
+    '\u0635\u0641\u0631': '0',
+    '\u0648\u0627\u062D\u062F': '1',
+    '\u0627\u062B\u0646\u064A\u0646': '2',
+    '\u0627\u062B\u0646\u062A\u064A\u0646': '2',
+    '\u062B\u0644\u0627\u062B\u0629': '3',
+    '\u062B\u0644\u0627\u062B': '3',
+    '\u0623\u0631\u0628\u0639\u0629': '4',
+    '\u0623\u0631\u0628\u0639': '4',
+    '\u062E\u0645\u0633\u0629': '5',
+    '\u062E\u0645\u0633': '5',
+    '\u0633\u062A\u0629': '6',
+    '\u0633\u062A': '6',
+    '\u0633\u0628\u0639\u0629': '7',
+    '\u0633\u0628\u0639': '7',
+    '\u062B\u0645\u0627\u0646\u064A\u0629': '8',
+    '\u062B\u0645\u0627\u0646\u064A': '8',
+    '\u062A\u0633\u0639\u0629': '9',
+    '\u062A\u0633\u0639': '9'
+  };
   function fixArabicNumbers(text){
     if(!text) return text;
+    const pattern = new RegExp('\\b(' + Object.keys(AR_WORDS).join('|') + ')\\b', 'g');
     return String(text)
-      .replace(/\b(صفر|واحد|اثنين|اثنتين|ثلاثة|ثلاث|أربعة|أربع|خمسة|خمس|ستة|ست|سبعة|سبع|ثمانية|ثماني|تسعة|تسع)\b/g, m => ({
-        'صفر':'0','واحد':'1','اثنين':'2','اثنتين':'2','ثلاثة':'3','ثلاث':'3',
-        'أربعة':'4','أربع':'4','خمسة':'5','خمس':'5','ستة':'6','ست':'6',
-        'سبعة':'7','سبع':'7','ثمانية':'8','ثماني':'8','تسعة':'9','تسع':'9'
-      }[m] || m))
-      .replace(/[٠-٩]/g, d => AR_DIGITS[d]);
+      .replace(pattern, m => AR_WORDS[m] || m)
+      .replace(/[\u0660-\u0669]/g, d => AR_DIGITS[d]);
   }
+
   return {
     toEnglishDigits, normalizeArabic, cleanSpaces, toNumber,
     normalizeBarcode, formatMoney, debounce, uid, escapeHtml,
