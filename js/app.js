@@ -360,7 +360,7 @@ function itemCardHTML(it){
   function handleTool(action){
     switch(action){
       case 'rate': return editRate();
-      case 'sync': return doSync();
+      case 'manualSync': return openManualSync();
       case 'users': return openUsersManager();
       case 'import': return openImportDialog();
       case 'export': CSV.exportAll(); return UI.toast('تم تصدير الملف');
@@ -840,6 +840,87 @@ clearSearchBtn.addEventListener('click', () => {
   window.addEventListener('DOMContentLoaded', () => {
     init().catch(e => { console.error(e); UI.toast('خطأ في التهيئة: '+e.message,'error',6000); });
   });
+function openManualSync(){
+  UI.modal({
+    title: '🔄 المزامنة اليدوية',
+    bodyHTML: `
+      <div style="text-align:right;">
+        <p style="margin:.3rem 0 1rem;color:var(--text-secondary);">
+          لأن التطبيق يعمل بدون إنترنت، يمكنك نقل البيانات بين الأجهزة يدويًا عبر ملفات CSV.
+        </p>
 
+        <div style="background:var(--bg);padding:.9rem;border-radius:12px;margin-bottom:.8rem;border:1px solid var(--border);">
+          <h4 style="color:var(--primary);margin:0 0 .5rem;">📤 الخطوة 1: تصدير من هذا الجهاز</h4>
+          <p class="muted small" style="margin:.2rem 0 .6rem;">
+            احفظ كل الأصناف في ملف CSV على هاتفك.
+          </p>
+          <button class="btn primary small" id="doExport" style="width:100%;">📥 تصدير كل الأصناف</button>
+        </div>
+
+        <div style="background:var(--bg);padding:.9rem;border-radius:12px;border:1px solid var(--border);">
+          <h4 style="color:var(--blue);margin:0 0 .5rem;">📥 الخطوة 2: استيراد من جهاز آخر</h4>
+          <p class="muted small" style="margin:.2rem 0 .6rem;">
+            اختر ملف CSV الذي صدّرته من الجهاز الآخر. سيتم دمج البيانات (تحديث الموجود وإضافة الجديد).
+          </p>
+          <input type="file" id="syncFile" accept=".csv,text/csv" style="margin-bottom:.5rem;" />
+          <button class="btn primary small" id="doImport" style="width:100%;" disabled>📤 استيراد ودمج</button>
+          <div id="syncReport" class="muted small" style="margin-top:.5rem;"></div>
+        </div>
+
+        <div style="background:rgba(217,119,6,.1);padding:.7rem;border-radius:10px;margin-top:.8rem;border-right:3px solid var(--warning);">
+          <p class="small" style="margin:0;color:var(--warning);">
+            ⚠️ <b>نصيحة:</b> صدّر نسخة احتياطية كل أسبوع واحفظها في مكان آمن.
+          </p>
+        </div>
+      </div>
+    `,
+    footHTML: `<button class="btn ghost" data-close2>إغلاق</button>`
+  });
+
+  // بعد فتح النافذة، اربط الأزرار
+  setTimeout(() => {
+    const modalEl = document.querySelector('.modal-overlay:last-child');
+    if(!modalEl) return;
+
+    modalEl.querySelector('[data-close2]').onclick = () => modalEl.remove();
+
+    // زر التصدير
+    modalEl.querySelector('#doExport').onclick = () => {
+      CSV.exportAll();
+      UI.toast('✅ تم تصدير الملف — احفظه في مكان آمن');
+    };
+
+    // زر الاستيراد
+    const fileInput = modalEl.querySelector('#syncFile');
+    const importBtn = modalEl.querySelector('#doImport');
+    const reportEl = modalEl.querySelector('#syncReport');
+
+    fileInput.onchange = () => {
+      importBtn.disabled = !fileInput.files.length;
+    };
+
+    importBtn.onclick = async () => {
+      const file = fileInput.files[0];
+      if(!file) return;
+      importBtn.disabled = true;
+      importBtn.textContent = 'جاري الدمج...';
+      try{
+        const res = await CSV.importFile(file);
+        reportEl.innerHTML = `
+          ✅ أُضيف: <b>${res.added}</b> صنف<br>
+          ♻️ حُدّث: <b>${res.updated}</b> صنف<br>
+          ⏭️ تُجوهل: <b>${res.ignored}</b>`;
+        UI.toast(`✅ تم الدمج: +${res.added} جديد، ♻️${res.updated} محدّث`);
+        await renderItems();
+      }catch(e){
+        UI.toast('❌ ' + e.message, 'error', 5000);
+        reportEl.textContent = 'خطأ: ' + e.message;
+      }finally{
+        importBtn.disabled = false;
+        importBtn.textContent = '📤 استيراد ودمج';
+      }
+    };
+  }, 50);
+}
   return { showPage, renderItems, openItemForm };
 })();
