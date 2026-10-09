@@ -2,13 +2,25 @@ const Items = (() => {
   let cache = [];
   let loaded = false;
 
-  async function load(force=false){
-    if(loaded && !force) return cache;
-    cache = await DB.all('items');
-    loaded = true;
-    Search.build(cache);
-    return cache;
+ async function load(force=false){
+  if(loaded && !force) return cache;
+  let data = await DB.all('items');
+
+  // إخفاء البيانات الحساسة عن الموظف
+  if(!Perm.can('viewCost') || !Perm.can('viewWhole')){
+    data = data.map(it => {
+      const clone = {...it};
+      if(!Perm.can('viewCost')) clone.cost = null;
+      if(!Perm.can('viewWhole')) clone.whole = null;
+      return clone;
+    });
   }
+
+  cache = data;
+  loaded = true;
+  Search.build(cache);
+  return cache;
+}
 
   async function get(id){
     return (await load()).find(x => x.id === id) || null;
