@@ -123,8 +123,8 @@ const App = (() => {
       <div class="ic-prices">
         <div><span class="muted small">سعر البيع</span><strong>${U.formatMoney(it.retail)}</strong></div>
         <div><span class="muted small">ريال يمني</span><strong>${yem}</strong></div>
-        ${canWhole ? `<div><span class="muted small">الجملة</span><strong>${U.formatMoney(it.whole)}</strong></div>`:''}
-        ${canCost ? `<div><span class="muted small">التكلفة</span><strong>${U.formatMoney(it.cost)}</strong></div>`:''}
+       ${canWhole ? `<div><span class="muted small">الجملة</span><strong>${U.formatMoney(it.whole)}</strong></div>`:''}
+${canCost ? `<div><span class="muted small">التكلفة</span><strong>${U.formatMoney(it.cost)}</strong></div>`:''}
       </div>
       <div class="ic-actions">
         <button data-act="qr" class="qr">QR</button>
