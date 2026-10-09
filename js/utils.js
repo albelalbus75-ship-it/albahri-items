@@ -72,7 +72,7 @@ const U = (() => {
   }
   function vibrate(pattern){ try{ navigator.vibrate && navigator.vibrate(pattern); }catch(e){} }
 
-  // Arabic number words → digits (Unicode escapes)
+  // Arabic number words mapped to digits (Unicode escapes)
   const AR_WORDS = {
     '\u0635\u0641\u0631': '0',
     '\u0648\u0627\u062D\u062F': '1',
