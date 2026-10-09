@@ -99,7 +99,7 @@ const App = (() => {
     document.getElementById('loadMoreBtn').hidden = shown >= list.length;
   }
 
- function itemCardHTML(it){
+function itemCardHTML(it){
   const rate = Settings.rate();
   const yem = U.formatMoney((it.retail||0) * rate);
   const canEdit = Perm.can('edit');
@@ -123,8 +123,8 @@ const App = (() => {
       <div class="ic-prices">
         <div><span class="muted small">سعر البيع</span><strong>${U.formatMoney(it.retail)}</strong></div>
         <div><span class="muted small">ريال يمني</span><strong>${yem}</strong></div>
-       ${canWhole ? `<div><span class="muted small">الجملة</span><strong>${U.formatMoney(it.whole)}</strong></div>`:''}
-${canCost ? `<div><span class="muted small">التكلفة</span><strong>${U.formatMoney(it.cost)}</strong></div>`:''}
+        ${canWhole ? `<div><span class="muted small">الجملة</span><strong>${U.formatMoney(it.whole)}</strong></div>`:''}
+        ${canCost ? `<div><span class="muted small">التكلفة</span><strong>${U.formatMoney(it.cost)}</strong></div>`:''}
       </div>
       <div class="ic-actions">
         <button data-act="qr" class="qr">QR</button>
@@ -133,6 +133,7 @@ ${canCost ? `<div><span class="muted small">التكلفة</span><strong>${U.for
         ${canDel ? `<button data-act="del" class="del">حذف</button>`:''}
       </div>
     </article>`;
+}
 }
 
   function wireItemCards(){
