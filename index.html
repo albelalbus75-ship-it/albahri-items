@@ -1211,6 +1211,13 @@ function productCard(it){
     <div class="p-icon">📦</div>
     <div class="p-body">
       <div class="p-name">${esc(it.name)}</div>
+
+      <!-- ✅ حقل الباركود الجديد -->
+      <div class="p-barcode" style="display:flex;align-items:center;gap:6px;margin:6px 0;padding:6px 10px;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.3);border-radius:8px;font-family:ui-monospace,monospace;font-size:12px;color:var(--gold);direction:ltr;max-width:fit-content">
+        <span style="font-size:14px">📊</span>
+        <span>${it.barcode ? esc(it.barcode) : 'بدون باركود'}</span>
+      </div>
+
       <div class="p-meta">
         ${it.no ? `<span class="p-tag">#${esc(it.no)}</span>` : ''}
         ${it.model ? `<span class="p-tag">${esc(it.model)}</span>` : ''}
