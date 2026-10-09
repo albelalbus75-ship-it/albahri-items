@@ -1,4 +1,4 @@
-const VERSION = 'albahri-v1.0.1';   // ← رُفع من 1.0.0 إلى 1.0.1
+const VERSION = 'albahri-v1.0.2';  // ← رُفع من 1.0.0 إلى 1.0.1
 const CORE = [
   './', './index.html', './manifest.json',
   './css/variables.css','./css/base.css','./css/layout.css','./css/cards.css',
