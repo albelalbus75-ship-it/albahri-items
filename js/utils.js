@@ -70,22 +70,22 @@ const U = (() => {
     }catch(e){}
   }
   function vibrate(pattern){ try{ navigator.vibrate && navigator.vibrate(pattern); }catch(e){} }
-  return {toEnglishDigits, normalizeArabic, cleanSpaces, toNumber, normalizeBarcode, formatMoney, debounce, uid, escapeHtml, today, beep, vibrate};
+
+  // إصلاح الأرقام المعكوسة من البحث الصوتي
+  function fixArabicNumbers(text){
+    if(!text) return text;
+    return String(text)
+      .replace(/\b(صفر|واحد|اثنين|اثنتين|ثلاثة|ثلاث|أربعة|أربع|خمسة|خمس|ستة|ست|سبعة|سبع|ثمانية|ثماني|تسعة|تسع)\b/g, m => ({
+        'صفر':'0','واحد':'1','اثنين':'2','اثنتين':'2','ثلاثة':'3','ثلاث':'3',
+        'أربعة':'4','أربع':'4','خمسة':'5','خمس':'5','ستة':'6','ست':'6',
+        'سبعة':'7','سبع':'7','ثمانية':'8','ثماني':'8','تسعة':'9','تسع':'9'
+      }[m] || m))
+      .replace(/[٠-٩]/g, d => AR_DIGITS[d]);
+  }
+
+  return {
+    toEnglishDigits, normalizeArabic, cleanSpaces, toNumber,
+    normalizeBarcode, formatMoney, debounce, uid, escapeHtml,
+    today, beep, vibrate, fixArabicNumbers
+  };
 })();
-function fixArabicNumbers(text){
-  if(!text) return text;
-  return String(text)
-    // "واحد اثنين ثلاثة" → "123"
-    .replace(/\b(صفر|واحد|اثنين|اثنتين|ثلاثة|ثلاث|أربعة|أربع|خمسة|خمس|ستة|ست|سبعة|سبع|ثمانية|ثماني|تسعة|تسع)\b/g, m => ({
-      'صفر':'0','واحد':'1','اثنين':'2','اثنتين':'2','ثلاثة':'3','ثلاث':'3',
-      'أربعة':'4','أربع':'4','خمسة':'5','خمس':'5','ستة':'6','ست':'6',
-      'سبعة':'7','سبع':'7','ثمانية':'8','ثماني':'8','تسعة':'9','تسع':'9'
-    }[m] || m))
-    // "١٢٣" → "123"
-    .replace(/[٠-٩]/g, d => ({'٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9'}[d]));
-}
-return {
-  toEnglishDigits, normalizeArabic, cleanSpaces, toNumber,
-  normalizeBarcode, formatMoney, debounce, uid, escapeHtml,
-  today, beep, vibrate, fixArabicNumbers   // ← أضف هنا
-};
