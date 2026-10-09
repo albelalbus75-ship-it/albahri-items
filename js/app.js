@@ -134,7 +134,6 @@ function itemCardHTML(it){
       </div>
     </article>`;
 }
-}
 
   function wireItemCards(){
     document.querySelectorAll('.item-card').forEach(card => {
