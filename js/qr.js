@@ -41,33 +41,25 @@ const QR = (() => {
   m.element.querySelector('[data-share]').addEventListener('click', () => shareItem(item));
 }
 
-  function shareItem(item){
+ function shareItem(item){
   const rate = Settings.rate();
   const yem = U.formatMoney((item.retail||0) * rate);
-
-  // بناء رابط المشاركة
-  const base = location.origin + location.pathname.replace(/index\.html.*$/,'index.html');
-  const shareUrl = `${base}?item=${encodeURIComponent(item.id)}`;
 
   const txt = `📦 ${item.name}
 رقم الصنف: ${item.no || '-'}
 الباركود: ${item.barcode || '-'}
 
 💰 سعر البيع: ${U.formatMoney(item.retail)}
-💵 سعر الجملة: ${U.formatMoney(item.whole)}
-💵 التكلفة: ${U.formatMoney(item.cost)}
 🇾🇪 بالريال اليمني: ${yem}
-
-🔗 ${shareUrl}`;
+💵 سعر الجملة: ${U.formatMoney(item.whole)}
+💵 التكلفة: ${U.formatMoney(item.cost)}`;
 
   if(navigator.share){
     navigator.share({
       title: item.name,
-      text: txt,
-      url: shareUrl
+      text: txt
     }).catch(()=>{});
   } else {
-    // نسخ الرابط + النص
     navigator.clipboard.writeText(txt)
       .then(()=> UI.toast('✅ تم نسخ معلومات الصنف'))
       .catch(()=> UI.toast('⚠️ تعذّر النسخ','warn'));
