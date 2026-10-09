@@ -8,7 +8,7 @@ const U = (() => {
   function normalizeArabic(s){
     if(s==null) return '';
     return toEnglishDigits(String(s))
-      .replace(/[\u064B-\u0652\u0670\u0640]/g,'') // تشكيل وتطويل
+      .replace(/[\u064B-\u0652\u0670\u0640]/g,'')
       .replace(/[أإآٱ]/g,'ا')
       .replace(/ى/g,'ي')
       .replace(/ؤ/g,'و')
@@ -25,7 +25,6 @@ const U = (() => {
     const n = parseFloat(s);
     return isNaN(n) ? 0 : n;
   }
-  // معالجة أرقام Excel Scientific Notation (مثل 1.23E+11)
   function normalizeBarcode(v){
     if(v==null) return '';
     let s = toEnglishDigits(String(v)).trim();
@@ -33,7 +32,6 @@ const U = (() => {
       const n = Number(s);
       if(Number.isFinite(n) && Math.abs(n) < Number.MAX_SAFE_INTEGER) s = n.toFixed(0);
     }
-    // إزالة الأصفار البادئة الشائعة من Excel
     if(/^\d+\.0+$/.test(s)) s = s.replace(/\.0+$/,'');
     return s;
   }
@@ -70,8 +68,6 @@ const U = (() => {
     }catch(e){}
   }
   function vibrate(pattern){ try{ navigator.vibrate && navigator.vibrate(pattern); }catch(e){} }
-
-  // إصلاح الأرقام المعكوسة من البحث الصوتي
   function fixArabicNumbers(text){
     if(!text) return text;
     return String(text)
@@ -82,7 +78,6 @@ const U = (() => {
       }[m] || m))
       .replace(/[٠-٩]/g, d => AR_DIGITS[d]);
   }
-
   return {
     toEnglishDigits, normalizeArabic, cleanSpaces, toNumber,
     normalizeBarcode, formatMoney, debounce, uid, escapeHtml,
