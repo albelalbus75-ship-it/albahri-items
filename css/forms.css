@@ -177,3 +177,23 @@ textarea { min-height:100px; resize:vertical; }
   font-size:.82rem;
   font-weight:500;
 }
+/* ============ زر مسح البحث ============ */
+.icon-btn.clear-search {
+  color:var(--danger);
+  border-color:rgba(220,38,38,.35);
+  background:rgba(220,38,38,.08);
+  animation:fadeIn .2s ease;
+}
+.icon-btn.clear-search:hover {
+  background:var(--danger);
+  color:#fff;
+  border-color:var(--danger);
+  transform:scale(1.05);
+}
+.icon-btn.clear-search:active {
+  transform:scale(.92);
+}
+@keyframes fadeIn {
+  from { opacity:0; transform:scale(.8); }
+  to { opacity:1; transform:scale(1); }
+}
