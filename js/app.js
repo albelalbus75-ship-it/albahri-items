@@ -99,42 +99,41 @@ const App = (() => {
     document.getElementById('loadMoreBtn').hidden = shown >= list.length;
   }
 
-function itemCardHTML(it){
-  const rate = Settings.rate();
-  const yem = U.formatMoney((it.retail||0) * rate);
-  const canEdit = Perm.can('edit');
-  const canDel = Perm.can('delete');
-  const canCost = Perm.can('viewCost');
-  const canWhole = Perm.can('viewWhole');
-  return `
-    <article class="item-card" data-id="${U.escapeHtml(it.id)}">
-      <div class="ic-head">
-        <div>
-          <div class="ic-name">${U.escapeHtml(it.name)}</div>
-          <div class="ic-no">رقم: ${U.escapeHtml(it.no||'-')}</div>
+  function itemCardHTML(it){
+    const rate = Settings.rate();
+    const yem = U.formatMoney((it.retail||0) * rate);
+    const canEdit = Perm.can('edit');
+    const canDel = Perm.can('delete');
+    const canCost = Perm.can('viewCost');
+    const canWhole = Perm.can('viewWhole');
+    return `
+      <article class="item-card" data-id="${U.escapeHtml(it.id)}">
+        <div class="ic-head">
+          <div>
+            <div class="ic-name">${U.escapeHtml(it.name)}</div>
+            <div class="ic-no">رقم: ${U.escapeHtml(it.no||'-')}</div>
+          </div>
         </div>
-      </div>
-      <div class="ic-tags">
-        <span class="tag-barcode" title="الباركود">📊 ${U.escapeHtml(it.barcode || '—')}</span>
-        ${it.unit ? `<span>${U.escapeHtml(it.unit)}</span>`:''}
-        ${it.model ? `<span>${U.escapeHtml(it.model)}</span>`:''}
-        ${it.branch ? `<span>${U.escapeHtml(it.branch)}</span>`:''}
-      </div>
-      <div class="ic-prices">
-        <div><span class="muted small">سعر البيع</span><strong>${U.formatMoney(it.retail)}</strong></div>
-        <div><span class="muted small">ريال يمني</span><strong>${yem}</strong></div>
-        ${canWhole ? `<div><span class="muted small">الجملة</span><strong>${U.formatMoney(it.whole)}</strong></div>`:''}
-        ${canCost ? `<div><span class="muted small">التكلفة</span><strong>${U.formatMoney(it.cost)}</strong></div>`:''}
-      </div>
-      <div class="ic-actions">
-        <button data-act="qr" class="qr">QR</button>
-        <button data-act="share" class="share">📤</button>
-        ${canEdit ? `<button data-act="edit" class="edit">تعديل</button>`:''}
-        ${canDel ? `<button data-act="del" class="del">حذف</button>`:''}
-      </div>
-    </article>`;
-}
-}
+        <div class="ic-tags">
+          <span class="tag-barcode" title="الباركود">📊 ${U.escapeHtml(it.barcode || '—')}</span>
+          ${it.unit ? `<span>${U.escapeHtml(it.unit)}</span>`:''}
+          ${it.model ? `<span>${U.escapeHtml(it.model)}</span>`:''}
+          ${it.branch ? `<span>${U.escapeHtml(it.branch)}</span>`:''}
+        </div>
+        <div class="ic-prices">
+          <div><span class="muted small">سعر البيع</span><strong>${U.formatMoney(it.retail)}</strong></div>
+          <div><span class="muted small">ريال يمني</span><strong>${yem}</strong></div>
+          ${canWhole ? `<div><span class="muted small">الجملة</span><strong>${U.formatMoney(it.whole)}</strong></div>`:''}
+          ${canCost ? `<div><span class="muted small">التكلفة</span><strong>${U.formatMoney(it.cost)}</strong></div>`:''}
+        </div>
+        <div class="ic-actions">
+          <button data-act="qr" class="qr">QR</button>
+          <button data-act="share" class="share">📤</button>
+          ${canEdit ? `<button data-act="edit" class="edit">تعديل</button>`:''}
+          ${canDel ? `<button data-act="del" class="del">حذف</button>`:''}
+        </div>
+      </article>`;
+  }
 
   function wireItemCards(){
     document.querySelectorAll('.item-card').forEach(card => {
@@ -166,6 +165,8 @@ function itemCardHTML(it){
   function showItemQuickView(it){
     const rate = Settings.rate();
     const yem = U.formatMoney((it.retail||0) * rate);
+    const canWhole = Perm.can('viewWhole');
+    const canCost = Perm.can('viewCost');
     const m = UI.modal({
       title: 'تفاصيل الصنف',
       bodyHTML: `
@@ -175,8 +176,8 @@ function itemCardHTML(it){
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;background:var(--bg);padding:.8rem;border-radius:12px;margin-top:.6rem;">
             <div><span class="muted small">سعر البيع</span><br><strong style="color:var(--primary);font-size:1.1rem;">${U.formatMoney(it.retail)}</strong></div>
             <div><span class="muted small">ريال يمني</span><br><strong style="color:var(--blue);font-size:1.1rem;">${yem}</strong></div>
-            <div><span class="muted small">الجملة</span><br><strong style="color:var(--warning);">${U.formatMoney(it.whole)}</strong></div>
-            <div><span class="muted small">التكلفة</span><br><strong>${U.formatMoney(it.cost)}</strong></div>
+            ${canWhole ? `<div><span class="muted small">الجملة</span><br><strong style="color:var(--warning);">${U.formatMoney(it.whole)}</strong></div>` : ''}
+            ${canCost ? `<div><span class="muted small">التكلفة</span><br><strong>${U.formatMoney(it.cost)}</strong></div>` : ''}
           </div>
         </div>`,
       footHTML: `
@@ -193,6 +194,8 @@ function itemCardHTML(it){
   function openItemForm(item=null){
     const isEdit = !!item;
     const it = item || {barcode:'',no:'',name:'',model:'',cost:'',retail:'',whole:'',unit:'',branch:''};
+    const canCost = Perm.can('viewCost');
+    const canWhole = Perm.can('viewWhole');
     const m = UI.modal({
       title: isEdit ? 'تعديل صنف' : 'إضافة صنف',
       bodyHTML: `
@@ -209,9 +212,9 @@ function itemCardHTML(it){
             <label>الوحدة<input type="text" name="unit" value="${U.escapeHtml(it.unit)}" /></label>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;">
-            <label>التكلفة<input type="text" name="cost" inputmode="decimal" value="${it.cost ?? ''}" /></label>
+            ${canCost ? `<label>التكلفة<input type="text" name="cost" inputmode="decimal" value="${it.cost ?? ''}" /></label>` : ''}
             <label>البيع<input type="text" name="retail" inputmode="decimal" value="${it.retail ?? ''}" /></label>
-            <label>الجملة<input type="text" name="whole" inputmode="decimal" value="${it.whole ?? ''}" /></label>
+            ${canWhole ? `<label>الجملة<input type="text" name="whole" inputmode="decimal" value="${it.whole ?? ''}" /></label>` : ''}
           </div>
           <label>الفرع<input type="text" name="branch" value="${U.escapeHtml(it.branch)}" /></label>
           <div class="err error-box" hidden></div>
@@ -301,13 +304,11 @@ function itemCardHTML(it){
     status.hidden = false;
     txt.textContent = 'جاري الاستماع...';
 
-    // زر الإيقاف
     document.getElementById('voiceStop').onclick = () => {
       try{ rec.stop(); }catch(e){}
       status.hidden = true;
     };
 
-    // زر الرجوع — يوقف ويعيد المسح
     document.getElementById('voiceBack').onclick = () => {
       try{ rec.abort(); }catch(e){}
       status.hidden = true;
@@ -315,24 +316,19 @@ function itemCardHTML(it){
       renderItems();
     };
 
-    // النتائج
     rec.onresult = e => {
-  let t = Array.from(e.results).map(r => r[0].transcript).join(' ');
-  // إصلاح الأرقام المعكوسة
-  t = U.fixArabicNumbers(t);
-  txt.textContent = t;
-  document.getElementById('searchInput').value = t;
-  renderItems();
-};
+      let t = Array.from(e.results).map(r => r[0].transcript).join(' ');
+      t = U.fixArabicNumbers(t);
+      txt.textContent = t;
+      document.getElementById('searchInput').value = t;
+      renderItems();
+    };
 
-    // الأخطاء — نتعامل معها بهدوء
     rec.onerror = e => {
-      // تجاهل الأخطاء الطبيعية
       if(e.error === 'aborted' || e.error === 'no-speech' || e.error === 'audio-capture'){
         status.hidden = true;
         return;
       }
-      // الأخطاء الحقيقية فقط
       if(e.error === 'not-allowed'){
         UI.toast('🚫 تم رفض إذن الميكروفون. اسمح بالوصول من إعدادات المتصفح.', 'error', 5000);
       } else if(e.error === 'network'){
@@ -343,7 +339,6 @@ function itemCardHTML(it){
       status.hidden = true;
     };
 
-    // عند الانتهاء
     rec.onend = () => {
       setTimeout(() => { status.hidden = true; }, 800);
     };
@@ -606,7 +601,6 @@ function itemCardHTML(it){
     const itemId = params.get('item');
     if(!itemId) return;
 
-    // انتظر قليلًا حتى تحمّل الأصناف
     setTimeout(async () => {
       const it = await Items.get(itemId);
       if(!it){
@@ -690,18 +684,20 @@ function itemCardHTML(it){
     // Search
     const searchInput = document.getElementById('searchInput');
     searchInput.addEventListener('input', U.debounce(() => { shown = pageSize; renderItems(); }, 180));
-// زر مسح البحث
-const clearSearchBtn = document.getElementById('clearSearchBtn');
-searchInput.addEventListener('input', () => {
-  clearSearchBtn.hidden = !searchInput.value;
-});
-clearSearchBtn.addEventListener('click', () => {
-  searchInput.value = '';
-  clearSearchBtn.hidden = true;
-  shown = pageSize;
-  renderItems();
-  searchInput.focus();
-});
+
+    // زر مسح البحث
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    searchInput.addEventListener('input', () => {
+      clearSearchBtn.hidden = !searchInput.value;
+    });
+    clearSearchBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      clearSearchBtn.hidden = true;
+      shown = pageSize;
+      renderItems();
+      searchInput.focus();
+    });
+
     // Voice
     document.getElementById('voiceBtn').addEventListener('click', startVoice);
 
@@ -714,7 +710,7 @@ clearSearchBtn.addEventListener('click', () => {
             U.beep(980, 100);
             U.vibrate([40]);
             UI.toast('✅ ' + it.name);
-            document.getElementById('searchInput').value = it.name;
+            document.getElementById('searchInput').value = it.barcode || '';
             renderItems();
             showItemQuickView(it);
           } else {
