@@ -1142,9 +1142,9 @@ async function dbBulkPut(items){ const CH=500; for(let i=0;i<items.length;i+=CH)
 
 /* ═══════════ API ═══════════ */
 async function apiCall(params){
-  // ✅ ترميز صحيح يدعم + والأحرف الخاصة
+  // ✅ ترميز يدوي صحيح — يحافظ على + في الأصناف
   const encoded = Object.keys(params)
-    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(String(params[k])))
     .join('&');
   
   const res = await fetch(API_URL, {
