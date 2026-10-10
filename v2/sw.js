@@ -3,9 +3,12 @@ const CACHE_NAME = 'albahri-items-v2';
 const CACHE_URLS = [
   './',
   './index.html',
+  './index.html?action=add',
+  './index.html?action=stocktake',
   './manifest.json',
   'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js',
-  'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js'
+  'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js',
+  'https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;600;700;800;900&display=swap'
 ];
 
 /* تثبيت — تخزين كل الملفات */
