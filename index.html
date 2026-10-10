@@ -577,7 +577,14 @@ async function fullSync(){
       await dbClear();
       await dbBulkPut(cloud);
       console.log('✅ تم تحميل ' + cloud.length + ' صنف من Google Sheets');
+    } else if(DB.length > 0){
+      // ✅ السحابة فارغة والمحلي فيه بيانات → ارفع!
+      toast('⬆️ جاري رفع ' + DB.length + ' صنف...');
+      console.log('⬆️ بدء رفع ' + DB.length + ' صنف إلى Google Sheets');
+      await pushBulkToCloud(DB);
+      console.log('✅ تم رفع البيانات');
     }
+    await refreshCache();
     await refreshCache();
     const cu = await pullUsersFromCloud();
     if(cu.length) saveUsersList(cu);
