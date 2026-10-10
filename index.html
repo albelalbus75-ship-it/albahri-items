@@ -488,8 +488,12 @@ async function dbBulkPut(items){ const CH=500; for(let i=0;i<items.length;i+=CH)
 
 /* ═══════════ API — Google Sheets ═══════════ */
 async function apiCall(params){
-  const query = new URLSearchParams(params);
-  const res = await fetch(API_URL + '?' + query.toString());
+  // ✅ استخدام POST بدلاً من GET
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(params).toString()
+  });
   if(!res.ok) throw new Error('API error: ' + res.status);
   const data = await res.json();
   if(!data.ok) throw new Error(data.error || 'API error');
@@ -523,7 +527,7 @@ async function deleteItemFromCloud(id){
 async function pushBulkToCloud(items){
   if(!items || !items.length) return;
   try{
-    const CH = 2000;
+        const CH = 200;
     for(let i = 0; i < items.length; i += CH){
       const chunk = items.slice(i, i + CH).map(itemToAPI);
       showProgress(Math.round(((i + CH) / items.length) * 100));
