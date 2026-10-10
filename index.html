@@ -1142,10 +1142,15 @@ async function dbBulkPut(items){ const CH=500; for(let i=0;i<items.length;i+=CH)
 
 /* ═══════════ API ═══════════ */
 async function apiCall(params){
+  // ✅ ترميز صحيح يدعم + والأحرف الخاصة
+  const encoded = Object.keys(params)
+    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+    .join('&');
+  
   const res = await fetch(API_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams(params).toString()
+    body: encoded
   });
   if(!res.ok) throw new Error('API error: ' + res.status);
   const data = await res.json();
