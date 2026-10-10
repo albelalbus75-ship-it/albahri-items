@@ -8,6 +8,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0a0a0a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="الأصناف">
+<meta name="application-name" content="متجر الفيصل">
+<meta name="msapplication-TileColor" content="#d4af37">
+<meta name="format-detection" content="telephone=no">
+<meta name="color-scheme" content="dark">
 <title>متجر الفيصل | قاعدة الأصناف</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏺</text></svg>">
@@ -774,7 +782,19 @@ body{
 </style>
 </head>
 <body>
+<!-- Splash Screen -->
+<div id="splashScreen" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0a0a0a 0%,#1a1a1a 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .4s ease">
+  <div style="width:120px;height:120px;border-radius:30px;background:linear-gradient(135deg,#f4d03f,#b8860b);display:flex;align-items:center;justify-content:center;font-size:64px;box-shadow:0 20px 60px rgba(212,175,55,.5);animation:splashPulse 1.5s ease-in-out infinite">🏺</div>
+  <div style="margin-top:24px;font-family:'Cairo',sans-serif;font-size:24px;font-weight:900;background:linear-gradient(135deg,#f4d03f,#d4af37);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">متجر الفيصل</div>
+  <div style="margin-top:8px;font-size:13px;color:#d4af37;font-weight:700;opacity:.85">قاعدة الأصناف</div>
+  <div style="margin-top:32px;width:40px;height:40px;border:3px solid rgba(212,175,55,.2);border-top-color:#d4af37;border-radius:50%;animation:splashSpin 1s linear infinite"></div>
+</div>
 
+<style>
+@keyframes splashPulse{0%,100%{transform:scale(1);box-shadow:0 20px 60px rgba(212,175,55,.5)}50%{transform:scale(1.05);box-shadow:0 24px 80px rgba(212,175,55,.7)}}
+@keyframes splashSpin{to{transform:rotate(360deg)}}
+#splashScreen.hide{opacity:0;pointer-events:none}
+</style>
 <div class="progress" id="progress"></div>
 <div id="syncBadge" style="position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:9999;padding:6px 14px;border-radius:20px;color:#fff;font-size:11.5px;font-weight:800;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);font-family:'Tajawal',sans-serif;white-space:nowrap"></div>
 <!-- Login -->
@@ -2271,6 +2291,22 @@ async function runInit(){
   runInit();
 })();
 /* ═══════════ تسجيل Service Worker ═══════════ */
+  /* ═══════════ إخفاء Splash بعد التحميل ═══════════ */
+function hideSplash(){
+  const s = document.getElementById('splashScreen');
+  if(s){ s.classList.add('hide'); setTimeout(() => { if(s.parentNode) s.remove(); }, 500); }
+}
+window.addEventListener('load', () => setTimeout(hideSplash, 800));
+// احتياطي — إذا تأخر التحميل
+setTimeout(hideSplash, 3500);
+  /* ═══════════ إخفاء Splash بعد التحميل ═══════════ */
+function hideSplash(){
+  const s = document.getElementById('splashScreen');
+  if(s){ s.classList.add('hide'); setTimeout(() => { if(s.parentNode) s.remove(); }, 500); }
+}
+window.addEventListener('load', () => setTimeout(hideSplash, 800));
+// احتياطي — إذا تأخر التحميل
+setTimeout(hideSplash, 3500);
 if('serviceWorker' in navigator){
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js')
