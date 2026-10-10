@@ -1172,13 +1172,71 @@ function itemToAPI(item){
     updatedAt: new Date().toISOString()
   };
 }
+/* ═══════════ طابور المزامنة ═══════════ */
+function queueAdd(op){
+  return new Promise((res,rej)=>{
+    const tx = db.transaction('syncQueue','readwrite');
+    tx.objectStore('syncQueue').add({...op, ts: Date.now()});
+    tx.oncomplete = () => res();
+    tx.onerror = e => rej(tx.error);
+  });
+}
+function queueAll(){
+  return new Promise((res,rej)=>{
+    const tx = db.transaction('syncQueue','readonly');
+    const r = tx.objectStore('syncQueue').getAll();
+    r.onsuccess = () => res(r.result||[]);
+    r.onerror = e => rej(r.error);
+  });
+}
+function queueDelete(qid){
+  return new Promise((res,rej)=>{
+    const tx = db.transaction('syncQueue','readwrite');
+    tx.objectStore('syncQueue').delete(qid);
+    tx.oncomplete = () => res();
+    tx.onerror = e => rej(tx.error);
+  });
+}
+function queueClear(){
+  return new Promise((res,rej)=>{
+    const tx = db.transaction('syncQueue','readwrite');
+    tx.objectStore('syncQueue').clear();
+    tx.oncomplete = () => res();
+    tx.onerror = e => rej(tx.error);
+  });
+}
+
 async function pushItemToCloud(item){
   if(isSyncing) return;
-  try{ await apiCall({action:'write', data: JSON.stringify(itemToAPI(item))}); }catch(e){ console.warn('push:', e.message); }
+  const op = {action:'write', data: JSON.stringify(itemToAPI(item))};
+  if(!navigator.onLine){
+    await queueAdd(op);
+    if(typeof updateSyncBadge === 'function') updateSyncBadge();
+    return;
+  }
+  try{
+    await apiCall(op);
+  }catch(e){
+    console.warn('push → queue:', e.message);
+    await queueAdd(op);
+    if(typeof updateSyncBadge === 'function') updateSyncBadge();
+  }
 }
 async function deleteItemFromCloud(id){
   if(isSyncing) return;
-  try{ await apiCall({action:'delete', id: String(id)}); }catch(e){ console.warn('del:', e.message); }
+  const op = {action:'delete', id: String(id)};
+  if(!navigator.onLine){
+    await queueAdd(op);
+    if(typeof updateSyncBadge === 'function') updateSyncBadge();
+    return;
+  }
+  try{
+    await apiCall(op);
+  }catch(e){
+    console.warn('del → queue:', e.message);
+    await queueAdd(op);
+    if(typeof updateSyncBadge === 'function') updateSyncBadge();
+  }
 }
 async function pushBulkToCloud(items){
   if(!items || !items.length) return;
