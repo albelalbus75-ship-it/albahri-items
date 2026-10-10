@@ -758,8 +758,8 @@ body.light .bottom-nav{background:linear-gradient(180deg,rgba(255,255,255,.98),r
    🔥 Firebase Config — ضع مفاتيحك هنا
    ═══════════════════════════════════════════════════ */
 const firebaseConfig = {
-  apiKey: "AIzaSyD5NhH_J3EiJrIhWLbch8nNPRuYAJfMUE",
-  authDomain: "albahri-store1.firebaseapp.com",
+ // 📊 Google Sheets API
+const API_URL = 'https://script.google.com/macros/s/ضع_الرابط_هنا/exec';
   projectId: "albahri-store1",
   storageBucket: "albahri-store1.firebasestorage.app",
   messagingSenderId: "1080882835206",
@@ -841,20 +841,95 @@ function dbClear(){ return new Promise((res,rej)=>{ const tx = db.transaction('i
 async function dbBulkPut(items){ const CH=500; for(let i=0;i<items.length;i+=CH){ const sl = items.slice(i,i+CH); await new Promise((res,rej)=>{ const tx = db.transaction('items','readwrite'); const st = tx.objectStore('items'); sl.forEach(it=>st.put(it)); tx.oncomplete=res; tx.onerror=e=>rej(tx.error); }); } }
 
 /* ═══════════ Firebase ═══════════ */
+/* ═══════════ Google Sheets API ═══════════ */
 function initFirebase(){
-  try{
-    if(typeof firebase === 'undefined'){ console.log('⚠️ Firebase SDK غير محمل'); return false; }
-    if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    fbDB = firebase.firestore();
-    fbItemsCol = fbDB.collection('items');
-    fbUsersCol = fbDB.collection('users');
-    fbSettingsDoc = fbDB.collection('settings').doc('main');
-    console.log('✅ Firebase متصل');
-    return true;
-  }catch(e){ console.error('❌ Firebase:', e); return false; }
+  if(!API_URL || API_URL.includes('ضع_الرابط')){
+    console.warn('⚠️ API_URL غير مُهيأ');
+    return false;
+  }
+  console.log('✅ Google Sheets API جاهز');
+  return true;
 }
+
+async function apiCall(params){
+  const query = new URLSearchParams(params);
+  const res = await fetch(API_URL + '?' + query.toString());
+  if(!res.ok) throw new Error('API error: ' + res.status);
+  const data = await res.json();
+  if(!data.ok) throw new Error(data.error || 'API error');
+  return data;
+}
+
+async function pushItemToCloud(item){
+  if(isSyncing) return;
+  try{
+    await apiCall({action:'write', data: JSON.stringify(itemToFS(item))});
+  }catch(e){ console.warn('push:', e.message); }
+}
+
+async function deleteItemFromCloud(id){
+  if(isSyncing) return;
+  try{
+    await apiCall({action:'delete', id: String(id)});
+  }catch(e){ console.warn('del:', e.message); }
+}
+
+async function pushBulkToCloud(items){
+  if(!items || !items.length) return;
+  try{
+    const CH = 2000;
+    for(let i = 0; i < items.length; i += CH){
+      const chunk = items.slice(i, i + CH).map(itemToFS);
+      await apiCall({action:'bulkWrite', data: JSON.stringify(chunk)});
+    }
+  }catch(e){ console.error('pushBulk:', e); throw e; }
+}
+
+async function pullItemsFromCloud(){
+  try{
+    const res = await apiCall({action:'read'});
+    return (res.data || []).map(d => ({
+      id: d.id, barcode: d.barcode, no: d.no, name: d.name, model: d.model,
+      cost: d.cost, retail: d.retail, whole: d.whole, unit: d.unit,
+      branch: d.branch, special: d.special, package: d.package,
+      col2: d.col2, retail2: d.retail2, saleBranch: d.saleBranch
+    }));
+  }catch(e){ console.error('pull:', e); return []; }
+}
+
+async function pushUsersToCloud(){
+  if(isSyncing) return;
+  try{
+    for(const u of getUsers()){
+      await apiCall({action:'writeUser', data: JSON.stringify(u)});
+    }
+  }catch(e){ console.warn('pushUsers:', e.message); }
+}
+
+async function pullUsersFromCloud(){
+  try{
+    const res = await apiCall({action:'readUsers'});
+    return res.data || [];
+  }catch(e){ return []; }
+}
+
+async function pushRateToCloud(){
+  if(isSyncing) return;
+  try{
+    await apiCall({action:'writeRate', value: String(currentRate)});
+  }catch(e){ console.warn('pushRate:', e.message); }
+}
+
+async function pullRateFromCloud(){
+  try{
+    const res = await apiCall({action:'readRate'});
+    return Number(res.value) || 0;
+  }catch(e){ return null; }
+}
+
 function itemToFS(item){
   return {
+    id: String(item.id),
     barcode: item.barcode||'', no: item.no||'', name: item.name||'',
     model: item.model||'', cost: Number(item.cost)||0,
     retail: Number(item.retail)||0, whole: Number(item.whole)||0,
@@ -862,62 +937,11 @@ function itemToFS(item){
     special: Number(item.special)||0, package: item.package||'',
     col2: item.col2||'', retail2: Number(item.retail2)||0,
     saleBranch: item.saleBranch||'',
-    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-    updatedBy: currentUser ? currentUser.name : 'unknown'
+    updatedAt: new Date().toISOString()
   };
 }
-function fsToItem(doc){
-  const d = doc.data();
-  return { id: doc.id, barcode:d.barcode, no:d.no, name:d.name, model:d.model,
-    cost:d.cost, retail:d.retail, whole:d.whole, unit:d.unit,
-    branch:d.branch, special:d.special, package:d.package,
-    col2:d.col2, retail2:d.retail2, saleBranch:d.saleBranch };
-}
-async function pushItemToCloud(item){
-  if(!fbItemsCol || isSyncing) return;
-  try{ await fbItemsCol.doc(String(item.id)).set(itemToFS(item), {merge:true}); }catch(e){ console.warn('push:', e.message); }
-}
-async function deleteItemFromCloud(id){
-  if(!fbItemsCol || isSyncing) return;
-  try{ await fbItemsCol.doc(String(id)).delete(); }catch(e){}
-}
-async function pushBulkToCloud(items){
-  if(!fbItemsCol || !items || !items.length) return;
-  try{
-    const CH=400;
-    for(let i=0;i<items.length;i+=CH){
-      const b = fbDB.batch();
-      items.slice(i,i+CH).forEach(it => b.set(fbItemsCol.doc(String(it.id)), itemToFS(it), {merge:true}));
-      await b.commit();
-    }
-  }catch(e){ console.error('pushBulk:', e); }
-}
-async function pullItemsFromCloud(){
-  if(!fbItemsCol) return [];
-  try{ const s = await fbItemsCol.get(); return s.docs.map(fsToItem); }catch(e){ return []; }
-}
-async function pushUsersToCloud(){
-  if(!fbUsersCol || isSyncing) return;
-  try{
-    const b = fbDB.batch();
-    getUsers().forEach(u => b.set(fbUsersCol.doc(u.id), {name:u.name, username:u.username, password:u.password, role:u.role, active: u.active?1:0}, {merge:true}));
-    await b.commit();
-  }catch(e){}
-}
-async function pullUsersFromCloud(){
-  if(!fbUsersCol) return [];
-  try{ const s = await fbUsersCol.get(); return s.docs.map(d => ({id:d.id, ...d.data()})); }catch(e){ return []; }
-}
-async function pushRateToCloud(){
-  if(!fbSettingsDoc || isSyncing) return;
-  try{ await fbSettingsDoc.set({exchangeRate: Number(currentRate)||0, updatedAt: firebase.firestore.FieldValue.serverTimestamp()}, {merge:true}); }catch(e){}
-}
-async function pullRateFromCloud(){
-  if(!fbSettingsDoc) return null;
-  try{ const s = await fbSettingsDoc.get(); if(!s.exists) return null; return Number(s.data().exchangeRate)||0; }catch(e){ return null; }
-}
+
 async function fullSync(){
-  if(!fbItemsCol){ toast('☁️ Firebase غير مُهيأ','warn'); return; }
   if(isSyncing){ toast('⏳ جاري...'); return; }
   isSyncing = true; toast('☁️ جاري المزامنة...');
   try{
@@ -926,40 +950,17 @@ async function fullSync(){
     else if(DB.length > 0){ await pushBulkToCloud(DB); }
     await refreshCache();
     const cu = await pullUsersFromCloud();
-    if(cu.length) saveUsersList(cu); else await pushUsersToCloud();
+    if(cu.length) saveUsersList(cu);
     const cr = await pullRateFromCloud();
     if(cr !== null && cr > 0){ currentRate = cr; saveRate(); const r = $('#exchangeRate'); if(r) r.value = currentRate; render(); }
-    else { await pushRateToCloud(); }
     toast('✅ تمت المزامنة (' + DB.length + ')', 'ok');
   }catch(e){ toast('❌ فشل: ' + e.message, 'warn'); }
   finally{ isSyncing = false; }
 }
+
 function subscribeRealtime(){
-  if(!fbItemsCol) return;
-  try{
-    if(unsubscribeItems) unsubscribeItems();
-    unsubscribeItems = fbItemsCol.onSnapshot(snap => {
-      if(isSyncing || snap.metadata.hasPendingWrites) return;
-      const items = snap.docs.map(fsToItem);
-      dbClear().then(() => dbBulkPut(items)).then(() => { refreshCache(); console.log('🔥 تحديث فوري'); });
-    }, err => console.warn('RT:', err.message));
-    if(fbUsersCol){
-      if(unsubscribeUsers) unsubscribeUsers();
-      unsubscribeUsers = fbUsersCol.onSnapshot(snap => {
-        if(isSyncing || snap.metadata.hasPendingWrites) return;
-        const u = snap.docs.map(d => ({id:d.id, ...d.data()}));
-        if(u.length) saveUsersList(u);
-      });
-    }
-    if(fbSettingsDoc){
-      if(unsubscribeSettings) unsubscribeSettings();
-      unsubscribeSettings = fbSettingsDoc.onSnapshot(snap => {
-        if(isSyncing || !snap.exists) return;
-        const r = Number(snap.data().exchangeRate)||0;
-        if(r !== currentRate){ currentRate = r; saveRate(); const el = $('#exchangeRate'); if(el) el.value = r; render(); }
-      });
-    }
-  }catch(e){}
+  // لا يوجد realtime في Google Sheets — نستخدم مزامنة يدوية
+  console.log('ℹ️ Google Sheets لا يدعم Realtime');
 }
 (function wrapDB(){
   const _put = dbPut;
