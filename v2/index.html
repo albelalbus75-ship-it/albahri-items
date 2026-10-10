@@ -1303,6 +1303,72 @@ async function fullSync(){
   dbDelete = async function(id){ const r = await _del(id); if(!isSyncing) deleteItemFromCloud(id); return r; };
 })();
 
+  
+/* ═══════════ محرك المزامنة التلقائية ═══════════ */
+async function flushQueue(){
+  if(!navigator.onLine) return {sent:0, left:0};
+  if(isSyncing) return {sent:0, left:0};
+  const q = await queueAll();
+  if(!q.length) return {sent:0, left:0};
+  let sent = 0;
+  for(const op of q){
+    try{
+      const payload = {action: op.action};
+      if(op.data) payload.data = op.data;
+      if(op.id) payload.id = op.id;
+      await apiCall(payload);
+      await queueDelete(op.qid);
+      sent++;
+    }catch(e){
+      console.warn('flush stop:', e.message);
+      break;
+    }
+  }
+  await updateSyncBadge();
+  const left = (await queueAll()).length;
+  if(sent > 0){
+    toast('☁️ تمت مزامنة ' + sent + ' عملية', 'ok');
+  }
+  return {sent, left};
+}
+
+async function updateSyncBadge(){
+  const el = document.getElementById('syncBadge');
+  if(!el) return;
+  let q = [];
+  try{ q = await queueAll(); }catch(e){}
+  if(!navigator.onLine){
+    el.textContent = '📴 بدون نت' + (q.length ? ' • ' + q.length + ' معلّقة' : '');
+    el.style.background = 'linear-gradient(135deg,#dc2626,#991b1b)';
+    el.style.display = 'block';
+  } else if(q.length > 0){
+    el.textContent = '⏳ ' + q.length + ' بانتظار الرفع';
+    el.style.background = 'linear-gradient(135deg,#f59e0b,#d97706)';
+    el.style.display = 'block';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+/* مراقبة الاتصال */
+window.addEventListener('online', async () => {
+  toast('🌐 عاد الاتصال — جاري المزامنة...', 'ok');
+  setTimeout(() => flushQueue(), 800);
+});
+window.addEventListener('offline', () => {
+  toast('📴 وضع بدون إنترنت — ستعمل التعديلات محلياً', 'warn');
+  updateSyncBadge();
+});
+
+/* مزامنة دورية كل 30 ثانية */
+setInterval(() => {
+  if(navigator.onLine && !isSyncing) flushQueue();
+}, 30000);
+
+/* فحص أولي عند البدء */
+document.addEventListener('visibilitychange', () => {
+  if(!document.hidden && navigator.onLine) flushQueue();
+});
 /* ═══════════ المستخدمين ═══════════ */
 const USERS_KEY = 'items_users_v1', SESSION_KEY = 'items_session_v1';
 const PERMISSIONS = {
