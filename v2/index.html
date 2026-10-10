@@ -772,7 +772,7 @@ body{
 <body>
 
 <div class="progress" id="progress"></div>
-
+<div id="syncBadge" style="position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:9999;padding:6px 14px;border-radius:20px;color:#fff;font-size:11.5px;font-weight:800;display:none;box-shadow:0 4px 12px rgba(0,0,0,.4);font-family:'Tajawal',sans-serif;white-space:nowrap"></div>
 <!-- Login -->
 <div class="login-overlay" id="loginOverlay">
   <div class="login-card">
@@ -2254,6 +2254,8 @@ async function runInit(){
     await openDB();
     if(currentRate > 0){ const r = $('#exchangeRate'); if(r) r.value = currentRate; }
     await refreshCache();
+    if(typeof updateSyncBadge === 'function') updateSyncBadge();
+    if(typeof flushQueue === 'function' && navigator.onLine) setTimeout(() => flushQueue(), 1500);
     console.log('✅ Google Sheets API جاهز');
     setTimeout(() => fullSync(), 500);
   }catch(e){ console.error(e); alert('❌ ' + e.message); }
