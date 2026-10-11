@@ -454,3 +454,36 @@
   overflow:hidden;
   text-overflow:ellipsis;
 }
+/* ============ تصميم بلال البحري (شاشة الدخول) ============ */
+.author-credit {
+  margin-top: 1.5rem;
+  text-align: center;
+  width: 100%;
+}
+
+.author-credit h3 {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--primary);
+  font-family: 'Tajawal', 'Cairo', sans-serif;
+  letter-spacing: 0.5px;
+  margin: 0;
+  animation: authorPulse 2s infinite ease-in-out;
+}
+
+/* تأثير النبض والتوهج */
+@keyframes authorPulse {
+  0% {
+    transform: scale(1);
+    text-shadow: 0 0 6px rgba(5, 150, 105, 0.3);
+  }
+  50% {
+    transform: scale(1.08);
+    text-shadow: 0 0 18px rgba(5, 150, 105, 0.9),
+                 0 0 30px rgba(5, 150, 105, 0.5);
+  }
+  100% {
+    transform: scale(1);
+    text-shadow: 0 0 6px rgba(5, 150, 105, 0.3);
+  }
+}
