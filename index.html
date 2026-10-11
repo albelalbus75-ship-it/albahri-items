@@ -768,6 +768,44 @@ body{
 #voiceBar .vb-hint{
   text-align:center;font-size:11.5px;opacity:.85;margin-top:10px;
 }
+
+/* ============ تصميم بلال البحري (نبض متحرك) ============ */
+.author-credit {
+  margin-top: 22px;
+  text-align: center;
+  width: 100%;
+}
+
+.author-credit h3 {
+  font-family: 'Cairo', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  margin: 0;
+  letter-spacing: 1px;
+  background: linear-gradient(135deg, var(--gold-2), var(--gold), var(--gold-3));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: authorPulse 2s infinite ease-in-out;
+  filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.6));
+}
+
+@keyframes authorPulse {
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.4));
+  }
+  50% {
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 20px rgba(212, 175, 55, 1))
+            drop-shadow(0 0 35px rgba(212, 175, 55, 0.7));
+  }
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.4));
+  }
+}
+
 </style>
 </head>
 <body>
@@ -786,11 +824,9 @@ body{
       <div class="login-err" id="loginErr"></div>
       <button type="submit" class="login-btn" id="loginSubmit">دخول</button>
     </form>
-    <div class="login-hint">
-      <b>الحسابات الافتراضية:</b><br>
-      👑 مدير: <code>admin</code> / <code>admin123</code><br>
-      👤 موظف: <code>user</code> / <code>user123</code>
-    </div>
+<div class="author-credit">
+  <h3>تصميم بلال البحري</h3>
+</div>
   </div>
 </div>
 
