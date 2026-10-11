@@ -1023,8 +1023,7 @@ body{
     </div>
     <div class="st-wrap">
       <table class="st-table">
-        <thead><tr><th>#</th><th>اختيار الصنف</th><th>الباركود</th><th>رقم الصنف</th><th>اسم الصنف</th><th>الموديل</th><th>الفرع</th><th>التكلفة</th><th>البيع</th><th>البيع (ر.ي)</th><th>الوحدة</th><th>الكمية</th><th></th></tr></thead>
-        <tbody id="stBody"></tbody>
+<thead><tr><th>#</th><th>اختيار الصنف</th><th>الباركود</th><th>رقم الصنف</th><th>اسم الصنف</th><th>التكلفة</th><th>الوحدة</th><th>الكمية</th><th></th></tr></thead>        <tbody id="stBody"></tbody>
       </table>
     </div>
     <div class="formfoot"><button class="btn" id="stocktakeCloseBtn2">إغلاق</button></div>
@@ -2041,8 +2040,8 @@ function renderStList(){
     if(it){
       const yer = (Number(it.retail)||0)*currentRate;
       const cell = (v,cls) => (v !== '' && v != null) ? `<td class="st-cell ${cls||''}">${esc(v)}</td>` : `<td class="st-cell mut ${cls||''}">—</td>`;
-      mid = cell(it.barcode||'', 'num') + cell(it.no||'') + cell(it.name||'') + cell(it.model||'') + cell(it.branch||'الإدارة') + (isAdmin ? cell(fmt(it.cost),'num') : '<td class="st-cell mut">—</td>') + cell(fmt(it.retail),'num') + cell(currentRate>0&&yer?fmt(yer):'','num') + cell(it.unit||'');
-    } else mid = emptyTd.repeat(9);
+      
+    } else mid = emptyTd.repeat(5);
     return `<tr data-key="${r.key}"><td class="st-cell mut num" style="text-align:center">${idx+1}</td><td><input class="st-pick-input" data-key="${r.key}" placeholder="رقم / اسم / باركود" autocomplete="off"></td>${mid}<td><input type="number" class="st-qty-input" data-key="${r.key}" min="0" placeholder="0" value="${esc(r.qty||'')}" ${it?'':'disabled'}></td><td><button class="st-remove-btn" data-key="${r.key}">✕</button></td></tr>`;
   }).join('');
   bindStRows();
