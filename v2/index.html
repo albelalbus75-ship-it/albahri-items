@@ -18,7 +18,7 @@
 <meta name="color-scheme" content="dark">
 <title>  الفيصل | قاعدة الأصناف</title>
   <p>للتجارة العامة By-Belal Albahri - قاعدة الأصناف</p>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;600;700;800;900&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏺</text></svg>">
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
@@ -650,76 +650,329 @@ body{
 }
 .ur-actions button.danger{color:var(--danger)}
 
-/* Login */
+/* ═══════════ Login — Royal Gold ═══════════ */
 .login-overlay{
   position:fixed;inset:0;z-index:500;
-  background:var(--bg);display:none;
-  align-items:center;justify-content:center;padding:20px;
+  background:radial-gradient(ellipse at center, #1a1207 0%, #0a0a0a 60%, #000 100%);
+  display:none;align-items:center;justify-content:center;padding:20px;
+  overflow:hidden;
+}
+.login-overlay::before{
+  content:'';position:absolute;inset:0;
   background-image:
-    radial-gradient(circle at 50% 20%, rgba(212,175,55,.15), transparent 50%);
+    radial-gradient(circle at 20% 30%, rgba(212,175,55,.15) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(244,208,63,.12) 0%, transparent 40%);
+  animation:royalGlow 6s ease-in-out infinite alternate;
+  pointer-events:none;
+}
+.login-overlay::after{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle, rgba(212,175,55,.4) 1px, transparent 1px);
+  background-size:50px 50px;
+  opacity:.15;
+  animation:starFloat 30s linear infinite;
+  pointer-events:none;
+}
+@keyframes royalGlow{
+  0%{opacity:.6;transform:scale(1)}
+  100%{opacity:1;transform:scale(1.05)}
+}
+@keyframes starFloat{
+  0%{background-position:0 0}
+  100%{background-position:50px 50px}
 }
 .login-overlay.on{display:flex}
+
 .login-card{
-  background:linear-gradient(145deg,#1a1a1a,#0f0f0f);
-  border:1.5px solid var(--gold);
-  border-radius:24px;padding:36px 28px;
-  width:100%;max-width:400px;text-align:center;
-  box-shadow:0 24px 60px rgba(212,175,55,.2);
+  position:relative;
+  background:linear-gradient(145deg,#1a1a1a 0%,#0f0f0f 50%,#0a0a0a 100%);
+  border-radius:28px;
+  padding:44px 30px 34px;
+  width:100%;max-width:420px;
+  text-align:center;
+  box-shadow:
+    0 0 0 2.5px #d4af37,
+    0 0 0 4px #0a0a0a,
+    0 0 0 5.5px #b8860b,
+    0 30px 80px rgba(212,175,55,.45),
+    0 0 60px rgba(212,175,55,.25) inset,
+    0 15px 40px rgba(0,0,0,.8);
+  animation:cardEntrance .8s cubic-bezier(.2,.9,.3,1.2);
+  overflow:hidden;
 }
+@keyframes cardEntrance{
+  0%{transform:translateY(40px) scale(.9);opacity:0}
+  100%{transform:translateY(0) scale(1);opacity:1}
+}
+
+/* زخرفة ذهبية في الزوايا */
+.login-card::before{
+  content:'';position:absolute;
+  top:12px;left:12px;right:12px;bottom:12px;
+  border:1px solid rgba(212,175,55,.25);
+  border-radius:20px;
+  pointer-events:none;
+}
+
+/* خط ذهبي في الأعلى */
+.login-card::after{
+  content:'';position:absolute;
+  top:0;left:20%;right:20%;
+  height:3px;
+  background:linear-gradient(90deg,transparent,#f4d03f,#d4af37,#f4d03f,transparent);
+  border-radius:0 0 6px 6px;
+  box-shadow:0 2px 20px rgba(212,175,55,.8);
+}
+
+/* الشعار الدائري الملكي */
 .login-logo{
-  width:90px;height:90px;border-radius:24px;
-  margin:0 auto 18px;
-  background:linear-gradient(135deg,var(--gold-2),var(--gold-3));
+  width:110px;height:110px;
+  border-radius:50%;
+  margin:0 auto 22px;
+  background:
+    radial-gradient(circle at 30% 30%, #f4d03f, #d4af37 40%, #b8860b 80%, #7a5a06 100%);
   display:flex;align-items:center;justify-content:center;
-  font-size:48px;
-  box-shadow:0 8px 30px rgba(212,175,55,.5);
+  font-size:56px;
+  position:relative;
+  box-shadow:
+    0 0 0 3px #0a0a0a,
+    0 0 0 6px #d4af37,
+    0 0 0 8px #7a5a06,
+    0 15px 40px rgba(212,175,55,.6),
+    0 0 60px rgba(244,208,63,.4);
+  animation:logoPulse 2.5s ease-in-out infinite;
 }
+@keyframes logoPulse{
+  0%,100%{
+    box-shadow:
+      0 0 0 3px #0a0a0a,
+      0 0 0 6px #d4af37,
+      0 0 0 8px #7a5a06,
+      0 15px 40px rgba(212,175,55,.6),
+      0 0 60px rgba(244,208,63,.4);
+  }
+  50%{
+    box-shadow:
+      0 0 0 3px #0a0a0a,
+      0 0 0 6px #f4d03f,
+      0 0 0 8px #b8860b,
+      0 20px 60px rgba(212,175,55,.9),
+      0 0 90px rgba(244,208,63,.7);
+  }
+}
+
+/* تاج ذهبي فوق الشعار */
+.login-logo::before{
+  content:'👑';
+  position:absolute;
+  top:-22px;
+  font-size:32px;
+  filter:drop-shadow(0 4px 12px rgba(212,175,55,.9));
+  animation:crownFloat 3s ease-in-out infinite;
+}
+@keyframes crownFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-5px)}
+}
+
+/* العنوان الملكي */
 .login-card h1{
-  margin:0 0 6px;font-size:24px;font-weight:900;
+  margin:0 0 10px;
   font-family:'Cairo',sans-serif;
-  background:linear-gradient(135deg,var(--gold-2),var(--gold));
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  font-size:30px;
+  font-weight:900;
+  letter-spacing:-1px;
+  background:linear-gradient(135deg,#fde68a 0%,#f4d03f 25%,#d4af37 50%,#f4d03f 75%,#b8860b 100%);
+  background-size:200% 100%;
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 3px 10px rgba(212,175,55,.5));
+  animation:titleShine 4s ease-in-out infinite;
 }
-.login-sub{color:var(--txt-2);font-size:13px;margin:0 0 24px}
-.login-field{text-align:right;margin-bottom:14px}
+@keyframes titleShine{
+  0%,100%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+}
+
+.login-sub{
+  color:#c9a961;
+  font-size:13px;
+  font-weight:700;
+  margin:0 0 30px;
+  letter-spacing:.5px;
+  text-shadow:0 1px 3px rgba(0,0,0,.8);
+}
+
+/* زخرفة فاصلة */
+.login-card .login-form-divider{
+  display:flex;align-items:center;gap:12px;
+  margin:0 0 22px;
+  color:#d4af37;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:2px;
+}
+.login-card .login-form-divider::before,
+.login-card .login-form-divider::after{
+  content:'';flex:1;
+  height:1px;
+  background:linear-gradient(90deg,transparent,#d4af37,transparent);
+}
+
+/* حقول الإدخال الملكية */
+.login-field{text-align:right;margin-bottom:16px;position:relative}
 .login-field label{
-  display:block;font-size:12.5px;
-  font-weight:700;color:var(--gold);margin-bottom:6px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:12.5px;
+  font-weight:800;
+  color:#f4d03f;
+  margin-bottom:8px;
+  text-shadow:0 1px 3px rgba(0,0,0,.8);
+  letter-spacing:.3px;
 }
 .login-field input{
-  width:100%;padding:14px;
-  border:1.5px solid rgba(212,175,55,.25);
-  border-radius:12px;font-size:15px;
-  background:#0d0d0d;color:var(--txt);
-  outline:none;direction:ltr;text-align:left;font-family:inherit;
+  width:100%;
+  padding:15px 16px;
+  border:2px solid rgba(212,175,55,.4);
+  border-radius:14px;
+  font-size:15px;
+  font-weight:700;
+  background:linear-gradient(145deg,#0d0d0d,#050505);
+  color:#f4d03f;
+  outline:none;
+  direction:ltr;
+  text-align:left;
+  font-family:'Cairo',sans-serif;
+  transition:.3s;
+  box-shadow:
+    inset 0 2px 8px rgba(0,0,0,.8),
+    0 0 0 rgba(212,175,55,0);
+}
+.login-field input::placeholder{
+  color:rgba(212,175,55,.35);
+  font-weight:600;
 }
 .login-field input:focus{
-  border-color:var(--gold);
-  box-shadow:0 0 0 3px rgba(212,175,55,.15);
+  border-color:#f4d03f;
+  box-shadow:
+    inset 0 2px 8px rgba(0,0,0,.8),
+    0 0 0 4px rgba(212,175,55,.2),
+    0 0 30px rgba(212,175,55,.4);
+  background:linear-gradient(145deg,#141414,#0a0a0a);
 }
+
+/* رسالة الخطأ */
 .login-err{
-  color:var(--danger);font-size:12.5px;font-weight:700;
-  min-height:18px;margin:4px 0 12px;text-align:center;
+  color:#f87171;
+  font-size:12.5px;
+  font-weight:800;
+  min-height:20px;
+  margin:6px 0 14px;
+  text-align:center;
+  text-shadow:0 0 12px rgba(248,113,113,.5);
 }
+
+/* زر الدخول الملكي */
 .login-btn{
-  width:100%;padding:15px;border:none;border-radius:12px;
-  background:linear-gradient(135deg,var(--gold-2),var(--gold));
-  color:#000;font-size:16px;font-weight:900;
-  font-family:inherit;cursor:pointer;
-  box-shadow:0 8px 24px rgba(212,175,55,.35);
+  width:100%;
+  padding:17px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(135deg,#7a5a06 0%,#b8860b 25%,#d4af37 50%,#f4d03f 75%,#d4af37 100%);
+  background-size:200% 100%;
+  color:#0a0a0a;
+  font-size:17px;
+  font-weight:900;
+  font-family:'Cairo',sans-serif;
+  cursor:pointer;
+  letter-spacing:.5px;
+  box-shadow:
+    0 8px 24px rgba(212,175,55,.5),
+    0 0 0 2px rgba(212,175,55,.3),
+    inset 0 2px 4px rgba(255,255,255,.3),
+    inset 0 -2px 8px rgba(122,90,6,.4);
+  transition:.3s;
+  position:relative;
+  overflow:hidden;
+  text-shadow:0 1px 2px rgba(255,255,255,.4);
 }
+.login-btn::before{
+  content:'';position:absolute;
+  top:0;left:-100%;
+  width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);
+  transition:.5s;
+}
+.login-btn:hover::before{
+  left:100%;
+}
+.login-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:
+    0 12px 32px rgba(212,175,55,.7),
+    0 0 0 2px rgba(244,208,63,.6),
+    0 0 40px rgba(244,208,63,.4),
+    inset 0 2px 4px rgba(255,255,255,.4),
+    inset 0 -2px 8px rgba(122,90,6,.4);
+  background-position:100% 50%;
+}
+.login-btn:active{
+  transform:translateY(0) scale(.98);
+  box-shadow:
+    0 4px 16px rgba(212,175,55,.6),
+    inset 0 2px 8px rgba(122,90,6,.5);
+}
+.login-btn:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+  transform:none;
+}
+
+/* صندوق التلميح الملكي */
 .login-hint{
-  margin-top:22px;padding:14px;border-radius:12px;
-  background:rgba(255,255,255,.03);
-  border:1px dashed rgba(212,175,55,.3);
-  font-size:11.5px;color:var(--txt-2);
-  line-height:2;text-align:right;
+  margin-top:26px;
+  padding:16px 18px;
+  border-radius:14px;
+  background:linear-gradient(145deg, rgba(212,175,55,.08), rgba(122,90,6,.03));
+  border:1px dashed rgba(212,175,55,.4);
+  font-size:11.5px;
+  color:#c9a961;
+  line-height:2;
+  text-align:right;
+  position:relative;
+}
+.login-hint::before{
+  content:'✦';
+  position:absolute;
+  top:-8px;right:16px;
+  background:#0a0a0a;
+  color:#d4af37;
+  padding:0 8px;
+  font-size:14px;
+  text-shadow:0 0 12px rgba(212,175,55,.8);
+}
+.login-hint b{
+  color:#f4d03f;
+  display:block;
+  margin-bottom:6px;
+  font-size:12.5px;
+  text-shadow:0 0 8px rgba(212,175,55,.5);
 }
 .login-hint code{
-  background:#0d0d0d;padding:3px 8px;border-radius:6px;
-  font-family:ui-monospace,monospace;font-size:11px;
-  color:var(--gold);direction:ltr;display:inline-block;
-  border:1px solid rgba(212,175,55,.2);
+  background:#0a0a0a;
+  padding:3px 10px;
+  border-radius:6px;
+  font-family:ui-monospace,monospace;
+  font-size:11.5px;
+  color:#fde68a;
+  direction:ltr;
+  display:inline-block;
+  border:1px solid rgba(212,175,55,.4);
+  font-weight:800;
+  letter-spacing:.5px;
+  box-shadow:0 0 12px rgba(212,175,55,.2);
 }
 
 /* User menu */
@@ -802,21 +1055,27 @@ body{
 <div class="login-overlay" id="loginOverlay">
   <div class="login-card">
     <div class="login-logo">🏺</div>
-    <h1>  الفيصل</h1>
-    <p class="login-sub">للتجارة العامة — قاعدة الأصناف</p>
-    <form id="loginForm" onsubmit="return false">
-      <div class="login-field"><label>👤 اسم المستخدم</label><input type="text" id="loginUser" placeholder="admin" autocomplete="username"></div>
-      <div class="login-field"><label>🔒 كلمة المرور</label><input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password"></div>
+    <h1>متجر الفيصل</h1>
+    <p class="login-sub">✦ للتجارة العامة — قاعدة الأصناف ✦</p>
+    <div class="login-form-divider">التسجيل</div>
+    <form id="loginForm" onsubmit="return false">>
+      <div class="login-field">
+  <label>👤 اسم المستخدم</label>
+  <input type="text" id="loginUser" placeholder="admin" autocomplete="username">
+</div>
+<div class="login-field">
+  <label>🔒 كلمة المرور</label>
+  <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+</div>
       <div class="login-err" id="loginErr"></div>
       <button type="submit" class="login-btn" id="loginSubmit">دخول</button>
     </form>
-    <div class="login-hint">
-      <b>الحسابات الافتراضية:</b><br>
-      👑 مدير: <code>admin</code> / <code>admin123</code><br>
-      👤 موظف: <code>user</code> / <code>user123</code>
-    </div>
-  </div>
+   <div class="login-hint">
+  <b>👑 الحسابات الافتراضية</b>
+  <div style="margin-top:8px">👑 مدير: <code>admin</code> / <code>admin123</code></div>
+  <div style="margin-top:4px">👤 موظف: <code>user</code> / <code>user123</code></div>
 </div>
+  </div>
 
 <!-- User Menu -->
 <div class="user-menu" id="userMenu">
